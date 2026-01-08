@@ -1,0 +1,1 @@
+$(BUILD_DIR)las\fs.o: $(SRC_DIR)las\fs.cpp

@@ -3,7 +3,7 @@
 #define Vector_buffer_size 
 
 struct hufs_vector{
-    __le64 file_id;
+    __le64 f_id;
     union {
         struct {
             __le64 blocks_start;
@@ -25,13 +25,13 @@ struct hufs_vector_table{
     hufs_vector_table *next_list;
 };
 
-static struct tree2id_map_item{
+struct tree2id_map_item{
     __le64 url_string;
     __le64 id;
 };
 
 struct hufs_tree2id_map{
-    tree2id_map_item map[];
+    tree2id_map_item map[HUFS_ID_MAP_SIZE];
     hufs_tree2id_map *next_map;
 };
 
@@ -42,9 +42,8 @@ struct hufs_root_info_block{
     __le64 device_size;
 //256 bytes
     __le64 ;
-    __le64 fs_vector_table;
+    __le64 root_vector_table;
 };
-
 
 class hufs{
 private:
@@ -56,7 +55,7 @@ public:
     ~hufs();
     
     void hufs_init();
-    void hufs_register();
+    void hufs_register(_re_pdata aux_reg_data, aux_reg fs_rgt_2);
     void hufs_format();
     void hufs_read();
     void hufs_write();

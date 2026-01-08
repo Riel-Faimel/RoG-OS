@@ -19,8 +19,11 @@ LDCMD = $(LD) $(LDFLAGS) -r -o
 include $(SRC_DIR)memalloc/memalloc.mk
 include $(SRC_DIR)kernel_memory_allocate\kmalloc.mk
 include $(SRC_DIR)src.mk
-#include $(SRC_DIR)
+include $(SRC_DIR)las\las.mk
 
+include $(SRC_DIR)fs\fs.mk
+
+KO = $(FS_KO)
 
 $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	$(call MKDIR_F,$@)
@@ -36,7 +39,9 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.asm
 
 export CC AS LD ARCH ROOT_DIR BUILD_DIR SRC_DIR CFLAGS ASFLAGS LDFLAGS 
 
-result: $(BUILD_DIR)arch\mod_no_tools.o
+result: $(BUILD_DIR)arch\mod_no_tools.o $(BUILD_DIR)las\fs.o
+
+ko: $(KO)
 
 clean:
 	rmdir /s "$(BUILD_DIR)"

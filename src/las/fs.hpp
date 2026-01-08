@@ -9,11 +9,36 @@
 #define __las_reg
 #endif
 typedef unsigned __las_reg _re_pdata;
-typedef _re_pdata (*aux_reg)();
+struct fs_basic_info{
+    _re_pdata test_1;
+    _re_pdata test_2;
+    char name[6];
+    unsigned total_size;
+    unsigned block_size;
+    unsigned root_info_block;
+    void *self;
+};
+typedef _re_pdata (*aux_reg)(void *, fs_basic_info );
 
-_re_pdata test = static_cast<_re_pdata>(0b00000000000000001010101010101010);
 _re_pdata reg_false = static_cast<_re_pdata>(0b10101010101010100000000000000000);
 
+struct for_create_fs{
+    ;
+};
+
+struct for_transmit_sche_info2fs{
+    ;
+};
+
+struct for_transmit_fs_info2sche{
+    ;
+};
+
+constexpr _re_pdata t_code = static_cast<_re_pdata>(0b00000000000000001010101010101010);
+consteval aux_reg ex_ = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
+    return t_code;
+};
+constexpr for_transmit_sche_info2fs test;
 template<typename T>
 concept FS_accept = requires(T fs) {
     fs.fs_register(test, ex_);
@@ -34,7 +59,7 @@ public:
     struct storage
     {
         int device_id; //4bytes
-        char file_system[6]; //6
+        char file_system_name[6]; //6
         
         char specific_descript[16]; //16
         unsigned char capacity[5]; //size of storage //5byte // 2^(5*8)MB ~ 1 PB
@@ -98,6 +123,10 @@ public:
              * this is for out of sync I/O func
              * 
              * */
+            storage(fs_basic_info init_info):
+            file_system_name(init_info.name),
+            specific_descript(init_info.descript),
+            {};//某个神人写的构造函数...
     };// up is 32 bytes
     #pragma pack(pop)
     /* is mem also swap then to be cache for disk
@@ -105,56 +134,25 @@ public:
      * not mem but swap is true swap
      * not mem either swap just disk */
 
-    class file_space
-    {
+    class file_space {
     public:
         storage header;
         storage devices[127]; //items of hardware once with storage capacity
-
-        storage make_header() {
-            struct storage head = {};
-            head.device_id = 0;
-            list_strcpy(head.file_system, "all");
-            list_strcpy(head.specific_descript, "all");
-
-            head.capacity[0] = 0;
-            head.capacity[1] = 0;
-            head.capacity[2] = 0;
-            head.capacity[3] = 0;
-            head.capacity[4] = 0;
-
-            head.status = fs_ready;
-            head.is_memory = 0b0;
-            head.is_local = 0b1;
-            head.is_swap = 0b0;
-            head.is_net_disk = 0b0;
-            head.extra_sign = 0b0;
-
-            return head;
-        };
-
-        int init_scheduler() {
-
-            this->header = make_header();// make file_space.header struct
-
-            //wait_for(); //wait for at least boot device. and also maybe others
-            //I think this should not in init()
-        
-            scheduler_operate_list I_O_list = {};
-
-            return 1;
-        };
-    }CFS; 
+        file_space();
+    };
+    file_space CFS; 
 /**
  * connect file space 
  * all for 128*32=4096 B : ! one page !
  */
-    _re_pdata aux_reg_data;
+    static _re_pdata aux_reg_data;
 private:
     struct IO_func
     {
-        short jump_to_IO_func[16];
-        short func_code[4080];// all for one page(4kB)
+        void init(); //qwq
+        void read();
+        void write();
+        char *dir();
     };
     
     struct scheduler_operate_list
@@ -162,6 +160,7 @@ private:
         IO_func page[256]; //full memory page : ! fixed size !
     };
 // property
+    unsigned search_fs_info_strc();
 public:
     int all_space_size;
     int mem_size;
@@ -173,32 +172,28 @@ public:
 
     //void wait_for();
 
-    struct fs_basic_info{
-        _re_pdata test_1;
-        _re_pdata test_2;
-        unsigned name;
-        unsigned total_size;
-        unsigned block_size;
-        unsigned root_info_block;
-        void *self;
+    template<FS_accept T>
+    void fs_rgt_1(T *fs, for_create_fs fs_init) {
+        this -> aux_reg_data = static_cast<_re_pdata >(random.ran());
+        ;
+        fs -> T(fs_init);
+        fs -> fs_register(aux_reg_data, fs_rgt_2);
+    }
+
+    aux_reg fs_rgt_2 = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
+        file_scheduler *la_this = static_cast<file_scheduler *>(ptr);
+        if(info_init.test_1 != la_this -> aux_reg_data) return reg_false;
+        unsigned fs_info_strc_id = la_this -> search_fs_info_strc();
+        la_this -> CFS.devices[fs_info_strc_id] = {
+            //.device_id = ,
+            .file_system_name = static_cast<fs_basic_info >(info_init).name
+        };
+        static_cast<IO_func *>(info_init.self) -> init();
+        return info_init.test_2;
     };
 
-    template<FS_accept T>
-    void fs_rgt_1(T *fs) {
-        this -> aux_reg_data = static_cast<_re_pdata >(random.ran());
-        fs -> fs_register(aux_reg_func, fs_rgt_2);
-    }
-
-    aux_reg *fs_rgt_2(fs_basic_info info_init) {
-        if(info_init.test_1 != this -> aux_reg_data) return reg_false;
-        unsigned fs_info_strc_id = search_fs_info_strc();
-        fs_info_list[fs_info_strc_id] = info_init;
-        info_init.self -> init();
-        return info_init.test_2;
-    }
-
-
-    int register_device(char file_system[6], 
+    int register_device(
+        char file_system[6], 
         char specific_descript[16], 
         unsigned char capacity[5], 
         unsigned char is_memory, 
@@ -214,7 +209,3 @@ private:
     };
 
 };
-
-aux_reg ex_(){
-    return test;
-}
