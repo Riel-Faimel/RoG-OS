@@ -39,22 +39,39 @@ void ext2_error (struct super_block * sb, const char * function,
 		sb->u.ext2_sb.s_sbh->b_dirt = 1;
 		sb->s_dirt = 1;
 	}
+/**
+ * let ext2 into error status
+ */
 	va_start (args, fmt);
 	vsprintf (buf, fmt, args);
 	va_end (args);
+/**
+ * deal with error msg
+ */
 	if (test_opt (sb, ERRORS_PANIC) ||
 	    (sb->u.ext2_sb.s_es->s_errors == EXT2_ERRORS_PANIC &&
 	     !test_opt (sb, ERRORS_CONT) && !test_opt (sb, ERRORS_RO)))
 		panic ("EXT2-fs panic (device %d/%d): %s: %s\n",
 		       MAJOR(sb->s_dev), MINOR(sb->s_dev), function, buf);
+/**
+ * if give param error=panic or EXT2_ERRORS_PANIC 
+ * in super_block 
+ * then: panic when into error
+ */
 	printk (KERN_CRIT "EXT2-fs error (device %d/%d): %s: %s\n",
 		MAJOR(sb->s_dev), MINOR(sb->s_dev), function, buf);
+/**
+ * error log
+ */
 	if (test_opt (sb, ERRORS_RO) ||
 	    (sb->u.ext2_sb.s_es->s_errors == EXT2_ERRORS_RO &&
 	     !test_opt (sb, ERRORS_CONT) && !test_opt (sb, ERRORS_PANIC))) {
 		printk ("Remounting filesystem read-only\n");
 		sb->s_flags |= MS_RDONLY;
 	}
+/**
+ * remount with read only
+ */
 }
 
 NORET_TYPE void ext2_panic (struct super_block * sb, const char * function,
@@ -355,6 +372,11 @@ static int ext2_check_descriptors (struct super_block * sb)
 struct super_block * ext2_read_super (struct super_block * sb, void * data,
 				      int silent)
 {
+/**
+ * sb: struct input from VFS
+ * data: mount params
+ * silent: silent = 1 will not print error msg
+ */
 	struct buffer_head * bh;
 	struct ext2_super_block * es;
 	unsigned long sb_block = 1;
@@ -372,7 +394,9 @@ struct super_block * ext2_read_super (struct super_block * sb, void * data,
 		sb->s_dev = 0;
 		return NULL;
 	}
-
+/**
+ * deal the mount params in data
+ */
 	lock_super (sb);
 	set_blocksize (dev, BLOCK_SIZE);
 	if (!(bh = bread (dev, sb_block, BLOCK_SIZE))) {
