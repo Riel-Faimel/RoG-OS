@@ -17,6 +17,7 @@ namespace KRN::LAS {
         _re_pdata test_1;
         _re_pdata test_2;
         char name[6];
+        char descript[16];
         unsigned total_size;
         unsigned block_size;
         unsigned root_info_block;
@@ -39,7 +40,7 @@ namespace KRN::LAS {
     };
 
     constexpr _re_pdata t_code = static_cast<_re_pdata>(0b00000000000000001010101010101010);
-    consteval aux_reg ex_ = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
+    constexpr aux_reg ex_ = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
         return t_code;
     };
     constexpr for_transmit_sche_info2fs test;
@@ -59,7 +60,7 @@ namespace KRN::LAS {
     class file_scheduler {
     // basic components
     public:
-    #pragma pack(push, 1)
+#pragma pack(push, 1)
         struct storage
         {
             int device_id; //4bytes
@@ -127,12 +128,8 @@ namespace KRN::LAS {
                  * this is for out of sync I/O func
                  * 
                  * */
-                //storage(fs_basic_info init_info):
-                //file_system_name(init_info.name),
-                //specific_descript(init_info.descript),
-                //{};//某个神人写的构造函数...
         };// up is 32 bytes
-    #pragma pack(pop)
+#pragma pack(pop)
         /* is mem also swap then to be cache for disk
          * is mem but not swap just mem
          * not mem but swap is true swap
@@ -178,8 +175,7 @@ namespace KRN::LAS {
 
         template<FS_accept T>
         void fs_rgt_1(T *fs, for_create_fs fs_init) {
-            this -> aux_reg_data = static_cast<_re_pdata >(random.ran());
-            ;
+            this -> aux_reg_data = static_cast<_re_pdata >(0b10101010);
             fs -> T(fs_init);
             fs -> fs_register(aux_reg_data, fs_rgt_2);
         }
@@ -190,7 +186,14 @@ namespace KRN::LAS {
             unsigned fs_info_strc_id = la_this -> search_fs_info_strc();
             la_this -> CFS.devices[fs_info_strc_id] = {
                 //.device_id = ,
-                .file_system_name = static_cast<fs_basic_info >(info_init).name
+                .file_system_name = {
+                    static_cast<fs_basic_info >(info_init).name[0],
+                    static_cast<fs_basic_info >(info_init).name[1],
+                    static_cast<fs_basic_info >(info_init).name[2],
+                    static_cast<fs_basic_info >(info_init).name[3],
+                    static_cast<fs_basic_info >(info_init).name[4],
+                    static_cast<fs_basic_info >(info_init).name[5],
+                }
             };
             static_cast<IO_func *>(info_init.self) -> init();
             return info_init.test_2;
