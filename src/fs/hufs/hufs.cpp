@@ -1,5 +1,6 @@
 #include "hufs.hpp"
 #include "../../las/fs.hpp"
+using namespace KRN::LAS;
 
 hufs::hufs(){
     struct hufs_vector{
