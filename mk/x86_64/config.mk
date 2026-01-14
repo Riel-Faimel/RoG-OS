@@ -1,10 +1,19 @@
 CC = g++
 AS = nasm
 LD = ld
+AR = ar
 
-CPPFLAGS = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-exceptions -fno-rtti -std=c++20
-CFLAGS = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-exceptions -fno-rtti
+CFLAGSO = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-builtin
+CPPFLAGSO = $(CFLAGSO) -fno-exceptions -std=c++20 -fno-rtti 
+
+CFLAGS = $(CFLAGSO) 
+CPPFLAGS = $(CPPFLAGSO)
+
+ClibFLAGS = $(CFLAGSO) -D__LIB_BUILD__
+CPPlibFALGS = $(CPPFLAGS) -D__LIB_BUILD__
+
 ASFLAGS = -f ELF64
-LDFLAGS = -nostdlib -static #-T $(ROOT_DIR)/mk/x86_64/sec.ld
+LDFLAGS = -nostdlib -static -L$(BUILD_DIR) #-T $(ROOT_DIR)/mk/x86_64/sec.ld
+ARFLAGS = rcs
 
-export CC AS LD CPPFLAGS CFLAGS ASFLAGS LDFLAGS 
+export CC AS LD AR CPPFLAGS CFLAGS ClibFLAGS CPPlibFALGS ASFLAGS LDFLAGS ARFLAGS 
