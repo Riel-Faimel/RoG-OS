@@ -1,6 +1,6 @@
 CC = g++
 AS = nasm
-LD = g++
+LD = ld
 
 CPPFLAGS = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-exceptions -fno-rtti -std=c++20
 CFLAGS = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-exceptions -fno-rtti

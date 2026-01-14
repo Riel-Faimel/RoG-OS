@@ -218,7 +218,7 @@ namespace KRN::LAS {
         static _re_pdata aux_reg_data;
     private:
         struct IO_func {
-            void init(); //qwq
+            void init();
             void read();
             void write();
             char *dir();
@@ -264,7 +264,6 @@ namespace KRN::LAS {
                     static_cast<fs_basic_info >(info_init).name[5],
                 }
             };
-            static_cast<IO_func *>(info_init.self) -> init();
             return info_init.test_2;
         };
 
