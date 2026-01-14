@@ -181,11 +181,17 @@ namespace KRN::MM {
             void *ptr;
             unsigned size;
         };
-        [[noreturn]] static void Unable2Reg_error_tail(Unable2Reg_error_tail_input *input);
+        static void Unable2Reg_error_tail(Unable2Reg_error_tail_input *input);
+
         struct Need2UpdateStatusList_warning_tail_input{
             ;
         };
-        [[noreturn]] static void Need2UpdateStatusList_warning_tail(Need2UpdateStatusList_warning_tail_input *input);
+        static void Need2UpdateStatusList_warning_tail(Need2UpdateStatusList_warning_tail_input *input);
+
+        struct turncatebroken_error_rescue_input{
+            /* data */
+        };
+        static void turncatebroken_error_rescue(turncatebroken_error_rescue_input *input);
     }; 
 
 }

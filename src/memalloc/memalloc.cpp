@@ -232,6 +232,10 @@ namespace KRN::MM {
             sys_warnning("pointer to size list full!", SYS_WARNING);
         };
 /**
+ * full warning will deal by
+ * reg2_ptr2size_list(), it has 
+ * tail chainfor list_full
+ * 
  * maybe manager is not ready
  * so I need to check its status
  */
@@ -261,6 +265,73 @@ namespace KRN::MM {
         for(i;i->ptr == ptr_in;i++);
         unsigned size = i->size;
         unsigned int free_blks = (size + Block_Size - 1) / Block_Size;
+/**
+ * need to be free
+ */
+        unsigned at_blk = static_cast<unsigned char *>(i->ptr) - Storage;
+        unsigned sec_id = 0;
+/**
+ * |======|===>
+ * ^      ^
+ * start  here is the pointer
+ * I need to change into blocks
+ */
+        while (at_blk - status_list[sec_id] >= 0){
+            at_blk -= status_list[sec_id];
+            sec_id ++;
+        }
+        
+        if(at_blk + free_blks > status_list[sec_id]) {
+            sign_1 = (char )0xFF;
+            sys_warnning("memory deallocate error: beyound section length", SYS_ERROR);
+            return;
+        }
+
+        if (at_blk) {
+            if (!(sec_id & 1)){
+                sign_1 = (char )0xFF;
+                sys_warnning("memory deallocate error: deallocate null section", SYS_ERROR);
+                return;
+            };
+            goto COMMON_LABLE;// common
+        }else{
+            goto NULL_LABLE;
+/**
+ * |======|======|======>
+ * ^sec1  ^sec2  ^sec3
+ *        ^at_blk
+ * at_blk is just point at section edge
+ */
+        }
+        ;
+COMMON_LABLE:
+        if (status_list[sec_id] == free_blks + at_blk) {
+            compress_item(sec_id, free_blks);
+            return;
+        }
+        turncate_item(sec_id, at_blk, at_blk + free_blks);
+        if (sign_1 == (char )0xFF){
+/**
+ * turncate false, very bad!
+ * SYS_ERROR!
+ */
+            sys_warnning("memory deallocate error: turncate false in deallocate", SYS_ERROR);
+            turncatebroken_error_rescue_input *in = new turncatebroken_error_rescue_input{
+                //
+            };
+            mmtc.reg(
+                reinterpret_cast<FuncPtr >(turncatebroken_error_rescue),
+                in,
+                KRN::MM::TailChain::SELF_BLOCK
+            );
+        }
+NULL_LABLE:
+        if(status_list[sec_id] == free_blks){
+            delete_item(sec_id);
+            return;
+        }
+        extern_item(sec_id - 1, free_blks);
+        return;
     }
 
     TailChain::TailChain(

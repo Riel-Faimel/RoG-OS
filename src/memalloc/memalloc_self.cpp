@@ -22,4 +22,9 @@ namespace KRN::MM{
         ;
     };
 
+    void MMgr::turncatebroken_error_rescue(
+        turncatebroken_error_rescue_input *input
+    ){
+        ;
+    }
 }
