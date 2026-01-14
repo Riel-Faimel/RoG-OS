@@ -1,0 +1,1 @@
+$(BUILD_DIR)struc/log.o: $(SRC_DIR)struc/log.cpp
