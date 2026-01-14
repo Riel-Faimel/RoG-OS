@@ -1,4 +1,4 @@
-#include "../type/type.hpp"
+#include "./type/type.hpp"
 
 #ifndef LOG_SIGN_H
 #define LOG_SIGN_H

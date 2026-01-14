@@ -1,0 +1,1 @@
+$(BUILD_DIR)global/log.o: $(SRC_DIR)global/log.cpp

@@ -4,8 +4,8 @@
 #ifdef x86_64
 #include "../hard_tools/x86_64/time_ths.hpp"
 #endif
-#include "../kernel_memory_allocate/kmalloc.hpp"
-#include "../struc/main.hpp"
+#include "../libs/kernel_memory_allocate/kmalloc.hpp"
+#include "../global/main.hpp"
 
 namespace KRN::MM {
 
@@ -188,10 +188,10 @@ namespace KRN::MM {
         };
         static void Need2UpdateStatusList_warning_tail(Need2UpdateStatusList_warning_tail_input *input);
 
-        struct turncatebroken_error_rescue_input{
+        struct StatusListBroken_error_rescue_input{
             /* data */
         };
-        static void turncatebroken_error_rescue(turncatebroken_error_rescue_input *input);
+        static void StatusListBroken_error_rescue(StatusListBroken_error_rescue_input *input);
     }; 
 
 }

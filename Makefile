@@ -16,12 +16,16 @@ endif
 
 LDCMD = $(LD) $(LDFLAGS) -o
 
+include
+
+include
+
 include $(SRC_DIR)memalloc/memalloc.mk
-include $(SRC_DIR)kernel_memory_allocate\kmalloc.mk
-include $(SRC_DIR)las\las.mk
+include $(SRC_DIR)libs/kernel_memory_allocate/kmalloc.mk
+include $(SRC_DIR)las/las.mk
 include $(SRC_DIR)src.mk
 
-include $(SRC_DIR)fs\fs.mk
+include $(SRC_DIR)mods/fs/fs.mk
 
 KO = $(FS_KO)
 
@@ -39,7 +43,7 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.asm
 
 export CC AS LD ARCH ROOT_DIR BUILD_DIR SRC_DIR CFLAGS ASFLAGS LDFLAGS 
 
-result: $(BUILD_DIR)arch\kernel.o
+result: $(BUILD_DIR)arch/kernel.o
 
 ko: $(KO)
 

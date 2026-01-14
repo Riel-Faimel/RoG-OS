@@ -89,6 +89,15 @@ namespace KRN::MM {
     ){
         if(status_list[section_id + 1] <= blk_size){
             this->sign_1 = (char )0xFF;
+            sys_warnning((STXT )"status unknown error: extern broken", SYS_ERROR);
+            StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
+                //
+            };
+            mmtc.reg(
+                reinterpret_cast<FuncPtr >(StatusListBroken_error_rescue),
+                in,
+                KRN::MM::TailChain::SELF_BLOCK
+            );
             return;
         };
     /**
@@ -106,7 +115,16 @@ namespace KRN::MM {
         unsigned blk_size
     ){
         if(status_list[section_id] <= blk_size){
-            this->sign_1 = (char )0xFF;
+            sign_1 = (char )0xFF;
+            sys_warnning((STXT )"status unknown error: compress broken", SYS_ERROR);
+            StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
+                //
+            };
+            mmtc.reg(
+                reinterpret_cast<FuncPtr >(StatusListBroken_error_rescue),
+                in,
+                KRN::MM::TailChain::SELF_BLOCK
+            );
             return;
         };
 
@@ -128,7 +146,20 @@ namespace KRN::MM {
  */
         if (status_list[section_id] <= to) {
             sign_1 = (char )0xFF;
-            return ;
+/**
+ * turncate false, very bad!
+ * SYS_ERROR!
+ */
+            sys_warnning((STXT )"status unknown error: turncate broken", SYS_ERROR);
+            StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
+                //
+            };
+            mmtc.reg(
+                reinterpret_cast<FuncPtr >(StatusListBroken_error_rescue),
+                in,
+                KRN::MM::TailChain::SELF_BLOCK
+            );
+            return;
         };
         
         for (unsigned id = len() - 1;id > section_id;id --) {
@@ -310,21 +341,7 @@ COMMON_LABLE:
             return;
         }
         turncate_item(sec_id, at_blk, at_blk + free_blks);
-        if (sign_1 == (char )0xFF){
-/**
- * turncate false, very bad!
- * SYS_ERROR!
- */
-            sys_warnning((STXT )"memory deallocate error: turncate false in deallocate", SYS_ERROR);
-            turncatebroken_error_rescue_input *in = new turncatebroken_error_rescue_input{
-                //
-            };
-            mmtc.reg(
-                reinterpret_cast<FuncPtr >(turncatebroken_error_rescue),
-                in,
-                KRN::MM::TailChain::SELF_BLOCK
-            );
-        }
+        ;
 NULL_LABLE:
         if(status_list[sec_id] == free_blks){
             delete_item(sec_id);

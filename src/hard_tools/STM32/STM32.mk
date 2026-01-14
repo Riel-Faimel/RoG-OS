@@ -1,1 +1,1 @@
-$(SRC_DIR)hard_tools\STM32\time_ths.o: $(BUILD_DIR)hard_tools\STM32\time_ths.cpp
+$(SRC_DIR)hard_tools/STM32/time_ths.o: $(BUILD_DIR)hard_tools/STM32/time_ths.cpp

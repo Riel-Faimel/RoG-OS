@@ -1,4 +1,4 @@
-#include "../../type/type.hpp"
+#include "../../global/type/type.hpp"
 #include "../../las/las.hpp"
 /**
  * >>> HUFS <<<

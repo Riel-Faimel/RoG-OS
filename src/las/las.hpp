@@ -1,5 +1,5 @@
-#include "../struc/main.hpp"
-#include "../kernel_memory_allocate\kmalloc.hpp"
+#include "../global/main.hpp"
+#include "../libs/kernel_memory_allocate/kmalloc.hpp"
 #pragma once
 
 namespace KRN::LAS {
