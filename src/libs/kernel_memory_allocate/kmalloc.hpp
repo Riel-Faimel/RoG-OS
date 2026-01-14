@@ -29,7 +29,7 @@ public:
         if (!ptr) return;
         /* ... */;
     };
-}__attribute__((section(".kmalloc"))) kmalloc;
+} kmalloc __attribute__((section(".kmalloc")));
 
 void *operator new(size_t size);
 void operator delete(void *ptr);

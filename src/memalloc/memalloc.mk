@@ -15,4 +15,4 @@ $(BUILD_DIR)mmgr.o: \
 #depend: log.o kmalloc.o
 
 	$(call MKDIR_F,$@)
-	$(LDCMD) $@ $^ -los
+	$(LDCMD) $@ $^
