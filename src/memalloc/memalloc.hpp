@@ -4,12 +4,18 @@
 #ifdef x86_64
 #include "../hard_tools/x86_64/time_ths.hpp"
 #endif
-#include "..\kernel_memory_allocate\kmalloc.hpp"
+#include "../kernel_memory_allocate/kmalloc.hpp"
 #include "../struc/main.hpp"
 
 namespace KRN::MM {
 
     typedef void (*FuncPtr)(void *args);
+/**
+ * Tail chain function
+ * always void func()
+ * params and return need
+ * var outside
+ */
 
     struct MemoryManager_AddressValue{
         unsigned char *Base_Address;
@@ -117,10 +123,10 @@ namespace KRN::MM {
         void clean(TailChain_FuncList *func);
     };
 
-    class FixedMemoryPool {
+    class MMgr {
     private:
         unsigned *status_list;
-        struct ptr2size{
+        const struct ptr2size{
             void *ptr;
             unsigned size;
         } *ptr_list;
@@ -135,7 +141,7 @@ namespace KRN::MM {
         char sign_1;
         char sign_2;
     public:
-        FixedMemoryPool(
+        MMgr(
             MemoryManager_AddressValue mm_ad, 
             MemoryManager_SizeValue mm_sz,
             MemoryManager_TailChain mmtc_init
@@ -145,16 +151,17 @@ namespace KRN::MM {
         void* allocate(unsigned size, unsigned alignment = 8);
 
         // 释放内存（标记为可用即可，不需要真正清零）
-        void deallocate(void* ptr);
+        void deallocate(void* ptr_in);
 
         // 获取内存池使用情况
         unsigned used_bytes() const;
         unsigned free_bytes() const;
 
         // 禁止拷贝（内核风格）
-        FixedMemoryPool(const FixedMemoryPool&) = delete;
-        FixedMemoryPool& operator=(const FixedMemoryPool&) = delete;
+        MMgr(const MMgr&) = delete;
+        MMgr& operator=(const MMgr&) = delete;
     private:
+        inline unsigned len();
         unsigned char *addr_item(unsigned section_id);
         unsigned search_item(unsigned blk_size);
         void extern_item(unsigned section_id, unsigned blk_size);

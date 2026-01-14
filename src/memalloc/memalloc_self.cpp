@@ -2,7 +2,7 @@
 
 namespace KRN::MM{
 
-    void FixedMemoryPool::Unable2Reg_error_tail(
+    void MMgr::Unable2Reg_error_tail(
         Unable2Reg_error_tail_input *input
     ){
         input;
@@ -16,7 +16,7 @@ namespace KRN::MM{
      * as tail chain
      */
 
-    void FixedMemoryPool::Need2UpdateStatusList_warning_tail(
+    void MMgr::Need2UpdateStatusList_warning_tail(
         Need2UpdateStatusList_warning_tail_input *input
     ){
         ;

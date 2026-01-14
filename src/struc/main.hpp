@@ -1,3 +1,5 @@
+#include "log.hpp"
+
 namespace KRN{
     namespace MM{};
     namespace TOOL{};

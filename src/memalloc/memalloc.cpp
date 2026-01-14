@@ -3,7 +3,7 @@
 
 namespace KRN::MM {
 
-    FixedMemoryPool::FixedMemoryPool(
+    MMgr::MMgr(
         MemoryManager_AddressValue mm_ad,
         MemoryManager_SizeValue mm_sz,
         MemoryManager_TailChain mmtc_init
@@ -30,11 +30,17 @@ namespace KRN::MM {
         }/*status list clear*/
 
         for(int i = 0;i < ptr_list_size;i++){
-            ptr_list[i] = {NULL_PTR, 0};
+            const_cast<ptr2size *>(ptr_list)[i] = {NULL_PTR, 0};
         }/*ptr-size struct list clear*/
     }
 
-    unsigned char *FixedMemoryPool::addr_item(
+    inline unsigned MMgr::len() {
+        unsigned count;
+        for (count = 0;status_list[count];count++);
+        return count;
+    }
+
+    unsigned char *MMgr::addr_item(
         unsigned section_id
     ){
     /**
@@ -45,10 +51,10 @@ namespace KRN::MM {
             address += status_list[i];
         }
         address = address * Block_Size;
-        return address + Storage;//过载了...???
+        return address + Storage;
     };
 
-    unsigned FixedMemoryPool::search_item(
+    unsigned MMgr::search_item(
         unsigned blk_size
     ){
         unsigned id = 2;
@@ -59,7 +65,7 @@ namespace KRN::MM {
             id += 2;
         }
     /**
-     * jump first section: 
+     * skip first section: 
      * first is always null
      * maybe there're second or third section
      * then second become full always and goto third forth..
@@ -71,13 +77,13 @@ namespace KRN::MM {
      */
         sign_1 = (char )0xFF;
     /**
-     * awfor! no section
+     * alwfor! no section
      * it's an error
      */
         return 0;
     }
 
-    void FixedMemoryPool::extern_item(
+    void MMgr::extern_item(
         unsigned section_id, 
         unsigned blk_size
     ){
@@ -95,7 +101,7 @@ namespace KRN::MM {
         return ;
     };
 
-    void FixedMemoryPool::compress_item(
+    void MMgr::compress_item(
         unsigned section_id, 
         unsigned blk_size
     ){
@@ -109,25 +115,52 @@ namespace KRN::MM {
         return;
     }
 
-    void FixedMemoryPool::turncate_item(
+    void MMgr::turncate_item(
         unsigned section_id, 
         unsigned from, 
         unsigned to
     ){
-        ;
+/**
+ * |=========|============|===>
+ * ^         ^            ^
+ * start     from         to
+ * |<from--->|<to - from->|<status_list[section_id] - to
+ */
+        if (status_list[section_id] <= to) {
+            sign_1 = (char )0xFF;
+            return ;
+        };
+        
+        for (unsigned id = len() - 1;id > section_id;id --) {
+            status_list[id+2] = status_list[id];
+        }
+/**
+ * update status_list and give empty site for new section
+ */
+        status_list[section_id + 2] = status_list[section_id] - to;
+        status_list[section_id + 1] = to - from;
+        status_list[section_id] = from;
+
+        status_list[len() + 2] = 0;
+        return;
     }
 
-    void FixedMemoryPool::delete_item(
+    void MMgr::delete_item(
         unsigned section_id
     ){
-        ;
+        status_list[section_id - 1] += status_list[section_id] + status_list[section_id + 1];
+        for (section_id;status_list[section_id];section_id++){
+            status_list[section_id] = status_list[section_id + 2];
+        };
+        status_list[section_id] = 0;
+        return;
     }
 
-    void FixedMemoryPool::reg2_ptr2size_list(
+    void MMgr::reg2_ptr2size_list(
         void *ptr_in, 
         unsigned size_in
     ){
-        for(ptr2size *i = ptr_list;i < (ptr_list + ptr_list_size);i += 1){
+        for(ptr2size *i = const_cast<ptr2size *>(ptr_list);i < (ptr_list + ptr_list_size);i += 1){
             if(!(i->ptr)){
                 i->ptr = ptr_in;
                 i->size = size_in;
@@ -135,9 +168,9 @@ namespace KRN::MM {
             }
         };
         sign_2 = 0;
-    /**
-     * list is full
-     */
+/**
+ * list is full
+ */
         Unable2Reg_error_tail_input *in = new Unable2Reg_error_tail_input {
             ptr_in,
             size_in
@@ -146,65 +179,64 @@ namespace KRN::MM {
             reinterpret_cast<FuncPtr >(Unable2Reg_error_tail),
             static_cast<void *>(&in),
             TailChain::NEXT_BLOCK
-    /**
-     * NEXT_BLOCK:
-     * reg2 ptr-to-size list error will not
-     * block the main loop, but it block the next
-     * reg2_.... function, so it is next step block
-     */
+/**
+ * NEXT_BLOCK:
+ * reg2 ptr-to-size list error will not
+ * block the main loop, but it block the next
+ * reg2_.... function, so it is next step block
+ */
         );
-    /**
-     * == right==
-     * I need to add a tailchain
-     * void * point at the params struct
-     * 
-     * now I use new
-     */
+/**
+ * == right==
+ * I need to add a tailchain
+ * void * point at the params struct
+ * 
+ * now I use new
+ */
         return ;
     }
-    /**
-     * this can be called by allocate()
-     * then yon can find it
-     */
+/**
+ * this can be called by allocate()
+ * then yon can find it
+ */
 
-    void FixedMemoryPool::clear_ptr2size_list(
+    void MMgr::clear_ptr2size_list(
         ptr2size *ptr
     ){
-        for(ptr2size *i = ptr_list;i < (ptr_list + ptr_list_size) || ptr != i;i += 1){
+        for(ptr2size *i = const_cast<ptr2size *>(ptr_list);i < (ptr_list + ptr_list_size) || ptr != i;i += 1){
             if(!(ptr - i)){
                 i->ptr = NULL_PTR;
                 i->size = 0;
                 return ;
             };
         };
-    /**
-     * could not find this ptr with it's 
-     * size in the list
-     */
+/**
+ * could not find this ptr with it's 
+ * size in the list
+ */
         sign_1 = (char )0xFF;
         return ;
     }
 
-    void *FixedMemoryPool::allocate(
+    void *MMgr::allocate(
         unsigned size, 
         unsigned alignment
     ){
+        if(sign_1 == (char )0xFF)return NULL_PTR;
+/**
+ * this is from search_item()
+ * this function will give back a NULL_PTR
+ * when search is failed, so jump to 
+ */
         if(sign_2 == (char )0xFF){
-            ;
+            sys_warnning("pointer to size list full!", SYS_WARNING);
         };
-    /**
-     * maybe manager is not ready
-     * so I need to check its status
-     */
+/**
+ * maybe manager is not ready
+ * so I need to check its status
+ */
         unsigned needed_blks = (size + Block_Size - 1) / Block_Size;
         unsigned sec_id_searched = search_item(needed_blks);
-
-        if(sign_1 == 0xFF)return NULL_PTR;
-    /**
-     * this is from search_item()
-     * this function will give back a NULL_PTR
-     * when search is failed, so jump to 
-     */
         unsigned char *re;
 
         if(!sec_id_searched){
@@ -215,16 +247,20 @@ namespace KRN::MM {
             extern_item(sec_id_searched - 1, needed_blks);
         }
         reg2_ptr2size_list(re, needed_blks);
-    /**!!! args pointer in stack !!!
-     * now in kernel mem_pool
-     */
+/**!!! args pointer in stack !!!
+ * .
+ * >>>now in kernel mem_pool
+ */
         return re;
     }
 
-    void FixedMemoryPool::deallocate(
-        void *ptr
+    void MMgr::deallocate(
+        void *ptr_in
     ){
-        ;
+        ptr2size *i = const_cast<ptr2size *>(ptr_list);
+        for(i;i->ptr == ptr_in;i++);
+        unsigned size = i->size;
+        unsigned int free_blks = (size + Block_Size - 1) / Block_Size;
     }
 
     TailChain::TailChain(
@@ -251,13 +287,13 @@ namespace KRN::MM {
         for(TailChain_FuncList *i = list;i < list + size;i += 1){
             if(i->is_null)return i;
         };
-    /**
-     * ======
-     * maybe..
-     * I need to add something for error
-     * it will break the reg function
-     * ======
-     */
+/**
+ * ======
+ * maybe..
+ * I need to add something for error
+ * it will break the reg function
+ * ======
+ */
         return NULL_PTR;
     }
 
@@ -299,15 +335,15 @@ namespace KRN::MM {
             return;
         };
         struct_address->priority = priority_in;
-    /**
-     * don't worry
-     * struct_address->priority is not in stack 
-     * so there's no nullptr or suspended_ptr
-     * ===
-     * struct_address->priority is in self section
-     * but priority_in in on stack
-     * so, input params using priority_in maybe better
-     */
+/**
+ * don't worry
+ * struct_address->priority is not in stack 
+ * so there's no nullptr or suspended_ptr
+ * ===
+ * struct_address->priority is in self section
+ * but priority_in in on stack
+ * so, input params using priority_in maybe better
+ */
         switch (priority_in)
         {
         case NULL_PRIORITY:
@@ -338,10 +374,10 @@ namespace KRN::MM {
 
         struct_address->func_ptr = func_ptr_in;
         struct_address->args = args_in;
-    /**
-     * I use new, so args struct 
-     * is on kernel mem_pool
-     */
+/**
+ * I use new, so args struct 
+ * is on kernel mem_pool
+ */
         struct_address->is_null = 0;
     }
 
