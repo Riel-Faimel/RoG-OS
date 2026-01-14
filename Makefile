@@ -39,7 +39,7 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.asm
 
 export CC AS LD ARCH ROOT_DIR BUILD_DIR SRC_DIR CFLAGS ASFLAGS LDFLAGS 
 
-result: $(BUILD_DIR)arch\mod_no_tools.o $(BUILD_DIR)las\fs.o
+result: $(BUILD_DIR)arch\kernel.o
 
 ko: $(KO)
 

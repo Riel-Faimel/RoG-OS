@@ -35,6 +35,11 @@ namespace KRN::LAS {
         scheduler_operate_list I_O_list = {};;
     }
 
+    unsigned int KRN::LAS::file_scheduler::search_fs_info_strc() {
+        unsigned id = 0;
+        return id;
+    };
+
     KRN::LAS::_re_pdata KRN::LAS::file_scheduler::aux_reg_data;
     
     file_scheduler las;

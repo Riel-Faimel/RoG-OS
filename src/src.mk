@@ -1,5 +1,5 @@
-$(BUILD_DIR)arch\mod_no_tools.o: \
-	$(BUILD_DIR)00.o \
+$(BUILD_DIR)arch\kernel.o: \
+	$(BUILD_DIR)mmgr.o \
 	$(BUILD_DIR)las\las.o
 
 	$(call MKDIR_F,$@)
