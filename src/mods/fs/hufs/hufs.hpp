@@ -28,54 +28,56 @@ namespace KRN::FS::HUFS {
     using KRN::LAS::aux_reg;
     using KRN::LAS::fs_create_signal;
 
-    struct vector_table;
-    
-    struct vector{
-        __le64 f_id;
-        union {
-            struct {
-                __le64 blocks_start;
-                __le64 blocks_end;
-            } file;
-            struct {
-                __le64 start;/*MAX_BLOCK*/
-                vector_table *sub_folder_vector_table;
-            } folder;
-        };
-        __le64 data;
-    };
-    
-    struct vector_table{
-        vector_table *next_list;
-        vector v[];
-    };
-    
-    struct tree2id_map_item{
-        __le64 url_string;
-        __le64 id;
-    };
-    
-    struct tree2id_map{
-        tree2id_map *next_map;
-        tree2id_map_item map[];
-    };
-    
-    struct root_info_block{
-        __le64 fs_magic;
-        __le64 block_size = 4096; //4096 for default
-        __le64 total_blocks;
-        __le64 device_size;
-    //256 bytes
-        __le64 t;//delete
-        __le64 root_vector_table;
-    };
-    
-
     class HUFS{
-    private:
+        unsigned block_size; //bytes
+        unsigned total_size;
+public:
+        struct vector_table;
+        
+        struct vector{
+            __le64 f_id;
+            union {
+                struct {
+                    __le64 blocks_start;
+                    __le64 blocks_end;
+                } file;
+                struct {
+                    __le64 start;/*MAX_BLOCK*/
+                    vector_table *sub_folder_vector_table;
+                } folder;
+            };
+            __le64 data;
+        };
+
+        struct vector_table{
+            vector_table *next_list;
+            vector v[];
+        };
+
+        struct tree2id_map_item{
+            __le64 url_string;
+            __le64 id;
+        };
+
+        struct tree2id_map{
+            tree2id_map *next_map;
+            tree2id_map_item map[];
+        };
+
+        struct root_info_block{
+            __le64 fs_magic;
+            __le64 block_size = 4096; //4096 for default
+            __le64 total_blocks;
+            __le64 device_size;
+        //256 bytes
+            __le64 t;//delete
+            __le64 root_vector_table;
+        };
+    
+private:
         root_info_block root_info_block;
         
-    public:
+public:
         HUFS(fs_create_signal init_pkg);
         ~HUFS();
 

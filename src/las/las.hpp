@@ -1,5 +1,6 @@
 #include "../global/main.hpp"
 #include "../libs/kernel_memory_allocate/kmalloc.hpp"
+#include "../global/type/type.hpp"
 #pragma once
 
 namespace KRN::LAS {
@@ -58,6 +59,15 @@ namespace KRN::LAS {
  * LAS::fs_rgt_2() -> FS::init()
  * three handshakes
  * 
+ * And the data:
+ * (from mount signal)fs_create_signal init_pkg ->
+ * (from sche){
+ *      for_transmit_sche_info2fs, 
+ *      aux_reg fs_rgt_2
+ * } ->
+ * (from fs)for_transmit_fs2sche_info
+ * 
+ * 
  * ====
  * BIND:
  * 
@@ -93,10 +103,7 @@ namespace KRN::LAS {
         unsigned root_info_block;
         void *self;
     };
-    struct fs_create_signal {
-        ;
-    };
-    extern fs_create_signal init_pkg;
+    struct fs_create_signal ;
     struct for_transmit_sche_info2fs {
         ;
     };
@@ -125,6 +132,17 @@ namespace KRN::LAS {
         fs.Basic_info.total_size;
         fs.Basic_info.block_size;
         fs.Basic_info.root_info_block;
+    };
+
+    class Window{
+    private:
+        BYTE *buffer;
+        
+    public:
+        Window();
+        ~Window();
+        
+        BYTE operator[](unsigned);
     };
 
     class file_scheduler {
@@ -234,9 +252,18 @@ namespace KRN::LAS {
         int mem_size;
     // method
     public:
-        int read(char* route); //deal by filename
-        int write();
-        int creat(); //deal by device and blocks(pages)
+        char exist(STXT path);
+        void creat(STXT path); //deal by device and blocks(pages)
+        void open(STXT path, char mode);
+        void close(STXT path);
+        void del(STXT path);
+
+        void read(); //deal by filename
+        void write();
+        void move();
+        
+        void mkdir();
+        void deldir();
 
         //void wait_for();
 
@@ -244,8 +271,21 @@ namespace KRN::LAS {
         void fs_rgt_1(fs_create_signal fs_init) {
             this -> aux_reg_data = static_cast<_re_pdata >(0b10101010);
             T *fs = new T(fs_init);
-            for_transmit_sche_info2fs las2fs;
+            for_transmit_sche_info2fs las2fs = {
+                ,
+            };
             fs -> fs_register(las2fs, fs_rgt_2);
+/**
+ * now other file system has been registed
+ * so, i can call init
+ * 
+ * by the way,
+ * this function just as template and 
+ * come ture in mount.cpp, mount.cpp(
+ * or other thing) will call it when 
+ * file system has been dynamic linked
+ */
+            fs -> init();
         }
 
         aux_reg fs_rgt_2 = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
