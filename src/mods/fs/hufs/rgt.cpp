@@ -1,14 +1,5 @@
 #include "rgt.hpp"
 
-namespace KRN::LAS
-{
-    struct fs_create_signal {
-        unsigned block_size;
-        unsigned total_block;
-    };
-} // namespace KRN::LAS
-
-
 namespace KRN::FS::HUFS
 {
     using KRN::LAS::las;

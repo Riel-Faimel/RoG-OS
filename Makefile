@@ -27,12 +27,13 @@ include
 include $(SRC_DIR)memalloc/memalloc.mk
 include $(SRC_DIR)las/las.mk
 include $(SRC_DIR)global/struct.mk
+include $(SRC_DIR)modf/modf.mk
 include $(SRC_DIR)src.mk
 
 #mods
 include $(SRC_DIR)mods/fs/fs.mk
 
-KO = $(FS_KO)
+MOD = $(FS_MOD)
 
 $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	$(call MKDIR_F,$@)
@@ -52,7 +53,7 @@ libs: $(BUILD_DIR)libos.a
 
 result: $(BUILD_DIR)arch/kernel.o
 
-ko: $(KO)
+mod: $(MOD)
 
 clean:
 	rmdir /s "$(BUILD_DIR)"

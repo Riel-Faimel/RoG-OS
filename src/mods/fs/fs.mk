@@ -1,5 +1,5 @@
 include $(SRC_DIR)mods/fs/hufs/hufs.mk
 
-FS_KO = $(HUFS)
+FS_MOD = $(HUFS)
 
-export FS_KO
+export FS_MOD

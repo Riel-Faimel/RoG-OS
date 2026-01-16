@@ -4,14 +4,18 @@ namespace KRN::MODF
 {
     Modf::Modf(){
         ;
-    };
+    }
 
     Modf::~Modf(){
         ;
-    };
+    }
 
     template<unsigned int N> 
-    void regist_window(enum KRN::Window<N>::MODE (&mode), unsigned int (&id)){
+    void regist_window(enum KRN::Window<N>::MODE (&mode), unsigned (&id)){
+        ;
+    }
+
+    void clear_window(unsigned id){
         ;
     };
     Modf modf;
@@ -22,10 +26,15 @@ namespace KRN
     using KRN::MODF::modf;
 
     template<unsigned N>
-    Window<N>::Window(unsigned char (&buffer_in)[N]):
-    buffer(buffer_in), 
-    buffer_size(N){
+    Window<N>::Window():
+    buffer_size(N),
+    sign(0){
         modf.regist_window(mode, id);
+    }
+
+    template<unsigned N>
+    Window<N>::~Window(){
+        modf.clear_window(id);
     }
     
     template<unsigned N>

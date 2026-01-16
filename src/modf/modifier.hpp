@@ -17,12 +17,11 @@ namespace KRN
         MODE mode;
         unsigned char sign;
     public:
-        BYTE (&buffer)[N];
+        BYTE buffer[N];
 
-        Window(unsigned char (&buffer)[N]);
+        Window();
+        //Window(unsigned char (&buf)[N]);
         ~Window();
-
-        Window() = delete;
         
         BYTE operator[](unsigned);
         const BYTE operator[](unsigned)const;
@@ -41,7 +40,11 @@ public:
         ~Modf();
         
         template<unsigned N>
-        void regist_window(enum KRN::Window<N>::MODE (&mode), unsigned int (&id));
+        void regist_window(enum KRN::Window<N>::MODE (&mode), unsigned (&id));
+
+        void clear_window(unsigned id);
+        
+        class Shell;
     };
 
     extern Modf modf;

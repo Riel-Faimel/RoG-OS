@@ -124,6 +124,7 @@ namespace KRN::LAS {
     typedef _re_pdata (*aux_reg)(void *, fs_basic_info );
     extern _re_pdata reg_false;
 
+//compress test
     constexpr _re_pdata t_code = static_cast<_re_pdata>(0b00000000000000001010101010101010);
     constexpr aux_reg ex_ = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
         return t_code;
@@ -133,18 +134,27 @@ namespace KRN::LAS {
         (unsigned )4096,
         t_code
     };
+    constexpr STXT test_path = "A:/folder/file";
     template<typename T>
-    concept FS_accept = requires(T fs) {
+    concept FS_accept = requires(T fs, const Window<256>& test_win) {
         fs.fs_register(test, ex_);
         fs.init();
-        fs.read();
-        fs.write();
-        fs.fs_leave();
+        fs.read(test_path, test_win);
+        fs.write(test_path, test_win);
+        fs.exist(test_path);
+        fs.creat(test_path);
+        fs.del(test_path);
+        fs.open(test_path, test_win);
+        fs.close(test_path, test_win);
+        fs.move(test_path, test_path, test_win);
+        fs.mkdir(test_path);
+        fs.deldir(test_path);
+
         fs.Basic_info.name;
-        fs.Basic_info.total_size;
+        fs.Basic_info.total_blocks;
         fs.Basic_info.block_size;
-        fs.Basic_info.root_info_block;
     };
+//test end
 
     class file_scheduler {
     // basic components

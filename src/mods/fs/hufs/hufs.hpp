@@ -1,5 +1,5 @@
-#include "../../global/type/type.hpp"
-#include "../../las/las.hpp"
+#include "../../../global/type/type.hpp"
+#include "../../../las/las.hpp"
 /**
  * >>> HUFS <<<
  * 
@@ -83,7 +83,7 @@ public:
 
         struct {
             int name;
-            int total_size;
+            int total_blocks;
             int block_size;
             int root_info_block;
         } Basic_info;
@@ -91,9 +91,23 @@ public:
         
         void fs_register(for_transmit_sche_info2fs init_input, aux_reg fs_rgt_2);
         void init();
-        void read();
-        void write();
-        void fs_leave();
+        char exist(STXT path);
+        void creat(STXT path);
+        void del(STXT path);
+
+        template<unsigned N>
+        void open(STXT path, Window<N> win);
+        template<unsigned N>
+        void close(STXT path, Window<N> win);
+        template<unsigned N>
+        void read(STXT path, Window<N> win); //deal by filename
+        template<unsigned N>
+        void write(STXT path, Window<N> win);
+        template<unsigned N>
+        void move(STXT from, STXT to, Window<N> win);
+        
+        void mkdir(STXT path);
+        void deldir(STXT path);
         void format();
         void show_dir() const;
         void show_tree() const;
