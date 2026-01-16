@@ -9,8 +9,7 @@ $(BUILD_DIR)mmgr.o: \
 	$(BUILD_DIR)memalloc/memalloc.o \
 	$(BUILD_DIR)memalloc/memalloc_self.o \
 	$(BUILD_DIR)memalloc/tools_forMemalloc.o \
-	$(BUILD_DIR)memalloc/tools_forMemalloc_s.o\
-	$(BUILD_DIR)global/log.o
+	$(BUILD_DIR)memalloc/tools_forMemalloc_s.o
 
 #depend: log.o kmalloc.o
 

@@ -8,7 +8,6 @@
 #include "../global/main.hpp"
 
 namespace KRN::MM {
-
     typedef void (*FuncPtr)(void *args);
 /**
  * Tail chain function

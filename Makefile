@@ -26,6 +26,7 @@ include
 #static mods
 include $(SRC_DIR)memalloc/memalloc.mk
 include $(SRC_DIR)las/las.mk
+include $(SRC_DIR)global/struct.mk
 include $(SRC_DIR)src.mk
 
 #mods

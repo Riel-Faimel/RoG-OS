@@ -11,9 +11,9 @@ enum LOG_SIGN{
     SYS_MSG = 4,
     SYS_PASS = 5
 };
-#endif
 
-void sys_warnning(
+void sys_warning(
     STXT warnning_msg,
     enum LOG_SIGN sign
 );
+#endif

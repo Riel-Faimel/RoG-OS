@@ -1,9 +1,12 @@
-#include "../global/main.hpp"
+//#include "../global/main.hpp"
 #include "../libs/kernel_memory_allocate/kmalloc.hpp"
 #include "../global/type/type.hpp"
+#include "../modf/modifier.hpp"
+
 #pragma once
 
 namespace KRN::LAS {
+    using KRN::Window;
 
 /**
  * >>> Linear Address Space <<<
@@ -103,9 +106,14 @@ namespace KRN::LAS {
         unsigned root_info_block;
         void *self;
     };
-    struct fs_create_signal ;
+    struct fs_create_signal {
+        unsigned block_size;
+        unsigned total_block;
+    };
     struct for_transmit_sche_info2fs {
-        ;
+        unsigned block_size;
+        unsigned total_block;
+        _re_pdata t1;
     };
 /**
  * use for create file system
@@ -120,7 +128,11 @@ namespace KRN::LAS {
     constexpr aux_reg ex_ = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
         return t_code;
     };
-    constexpr for_transmit_sche_info2fs test;
+    constexpr for_transmit_sche_info2fs test = {
+        (unsigned )512,
+        (unsigned )4096,
+        t_code
+    };
     template<typename T>
     concept FS_accept = requires(T fs) {
         fs.fs_register(test, ex_);
@@ -132,17 +144,6 @@ namespace KRN::LAS {
         fs.Basic_info.total_size;
         fs.Basic_info.block_size;
         fs.Basic_info.root_info_block;
-    };
-
-    class Window{
-    private:
-        BYTE *buffer;
-        
-    public:
-        Window();
-        ~Window();
-        
-        BYTE operator[](unsigned);
     };
 
     class file_scheduler {
@@ -254,16 +255,21 @@ namespace KRN::LAS {
     public:
         char exist(STXT path);
         void creat(STXT path); //deal by device and blocks(pages)
-        void open(STXT path, char mode);
-        void close(STXT path);
         void del(STXT path);
 
-        void read(); //deal by filename
-        void write();
-        void move();
+        template<unsigned N>
+        void open(STXT path, Window<N> win);
+        template<unsigned N>
+        void close(STXT path, Window<N> win);
+        template<unsigned N>
+        void read(STXT path, Window<N> win); //deal by filename
+        template<unsigned N>
+        void write(STXT path, Window<N> win);
+        template<unsigned N>
+        void move(STXT from, STXT to, Window<N> win);
         
-        void mkdir();
-        void deldir();
+        void mkdir(STXT path);
+        void deldir(STXT path);
 
         //void wait_for();
 
@@ -272,7 +278,9 @@ namespace KRN::LAS {
             this -> aux_reg_data = static_cast<_re_pdata >(0b10101010);
             T *fs = new T(fs_init);
             for_transmit_sche_info2fs las2fs = {
-                ,
+                fs_init.block_size,
+                fs_init.total_block,
+                aux_reg_data
             };
             fs -> fs_register(las2fs, fs_rgt_2);
 /**

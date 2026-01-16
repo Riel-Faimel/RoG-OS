@@ -4,7 +4,7 @@ LD = x86_64-elf-ld
 AR = x86_64-elf-ar
 
 CFLAGSO = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-builtin
-CPPFLAGSO = $(CFLAGSO) -fno-exceptions -std=c++20 -fno-rtti 
+CPPFLAGSO = $(CFLAGSO) -fno-exceptions -std=c++20 -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics
 
 CFLAGS = $(CFLAGSO) 
 CPPFLAGS = $(CPPFLAGSO)

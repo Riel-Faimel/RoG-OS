@@ -89,7 +89,7 @@ namespace KRN::MM {
     ){
         if(status_list[section_id + 1] <= blk_size){
             this->sign_1 = (char )0xFF;
-            sys_warnning((STXT )"status unknown error: extern broken", SYS_ERROR);
+            sys_warning((STXT )"status unknown error: extern broken", SYS_ERROR);
             StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
                 //
             };
@@ -116,7 +116,7 @@ namespace KRN::MM {
     ){
         if(status_list[section_id] <= blk_size){
             sign_1 = (char )0xFF;
-            sys_warnning((STXT )"status unknown error: compress broken", SYS_ERROR);
+            sys_warning((STXT )"status unknown error: compress broken", SYS_ERROR);
             StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
                 //
             };
@@ -150,7 +150,7 @@ namespace KRN::MM {
  * turncate false, very bad!
  * SYS_ERROR!
  */
-            sys_warnning((STXT )"status unknown error: turncate broken", SYS_ERROR);
+            sys_warning((STXT )"status unknown error: turncate broken", SYS_ERROR);
             StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
                 //
             };
@@ -260,7 +260,7 @@ namespace KRN::MM {
  * when search is failed, so jump to 
  */
         if(sign_2 == (char )0xFF){
-            sys_warnning((STXT )"pointer to size list full!", SYS_WARNING);
+            sys_warning((STXT )"pointer to size list full!", SYS_WARNING);
         };
 /**
  * full warning will deal by
@@ -314,14 +314,14 @@ namespace KRN::MM {
         
         if(at_blk + free_blks > status_list[sec_id]) {
             sign_1 = (char )0xFF;
-            sys_warnning((STXT )"memory deallocate error: beyound section length", SYS_ERROR);
+            sys_warning((STXT )"memory deallocate error: beyound section length", SYS_ERROR);
             return;
         }
 
         if (at_blk) {
             if (!(sec_id & 1)){
                 sign_1 = (char )0xFF;
-                sys_warnning((STXT )"memory deallocate error: deallocate null section", SYS_ERROR);
+                sys_warning((STXT )"memory deallocate error: deallocate null section", SYS_ERROR);
                 return;
             };
             goto COMMON_LABLE;// common
