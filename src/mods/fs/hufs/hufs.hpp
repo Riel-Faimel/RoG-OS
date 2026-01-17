@@ -1,5 +1,6 @@
-#include "../../../global/type/type.hpp"
-#include "../../../las/las.hpp"
+#pragma once
+#include <global/type/type.hpp>
+#include <las/las.hpp>
 /**
  * >>> HUFS <<<
  * 
@@ -29,8 +30,6 @@ namespace KRN::FS::HUFS {
     using KRN::LAS::fs_create_signal;
 
     class HUFS{
-        unsigned block_size; //bytes
-        unsigned total_size;
 public:
         struct vector_table;
         
@@ -82,9 +81,9 @@ public:
         ~HUFS();
 
         struct {
-            int name;
-            int total_blocks;
-            int block_size;
+            const char *name = "HUFS";
+            unsigned total_blocks;
+            unsigned block_size;
             int root_info_block;
         } Basic_info;
         
@@ -111,5 +110,7 @@ public:
         void format();
         void show_dir() const;
         void show_tree() const;
+
+        void cmdinter(STXT command);
     };
 }

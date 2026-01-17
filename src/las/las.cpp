@@ -44,7 +44,7 @@ namespace KRN::LAS {
         //wait_for(); //wait for at least boot device. and also maybe others
         //I think this should not in init()
     
-        scheduler_operate_list I_O_list = {};;
+        scheduler_operate_list I_O_list = {};
     }
 
     unsigned int KRN::LAS::file_scheduler::search_fs_info_strc() {

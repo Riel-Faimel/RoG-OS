@@ -1,3 +1,6 @@
+#pragma once
+#define NULL_PTR 0
+
 typedef __signed__ char __s8;
 typedef unsigned char __u8;
 
@@ -15,6 +18,23 @@ typedef unsigned long __u64;
 #else
 #define __bitwise
 #endif
+
+#ifndef x86_64
+#ifndef STM32
+#define x86_64
+#endif
+#endif
+
+#ifdef STM32
+typedef unsigned size_t;
+#endif
+#ifdef x86_64
+#ifndef _SIZE_T
+#define _SIZE_T
+typedef __SIZE_TYPE__ size_t;
+#endif
+#endif
+
 
 typedef __u8 __bitwise __le8;
 typedef __u8 __bitwise __be8;

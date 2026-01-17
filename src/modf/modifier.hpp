@@ -1,34 +1,9 @@
-#include "../global/main.hpp"
-#include "../global/log.hpp"
+#pragma once
+#include <global/log.hpp>
 
 namespace KRN
 {
-    template<unsigned N>
-    class Window{
-    private:
-        enum MODE {
-            NO,
-            READ,
-            R_W,
-            WRITE
-        };
-        unsigned id;
-        unsigned buffer_size;
-        MODE mode;
-        unsigned char sign;
-    public:
-        BYTE buffer[N];
-
-        Window();
-        //Window(unsigned char (&buf)[N]);
-        ~Window();
-        
-        BYTE operator[](unsigned);
-        const BYTE operator[](unsigned)const;
-        
-        void set_mode(MODE target);
-    };
-    
+    enum class MODE;
 } // namespace KRN
 
 
@@ -40,7 +15,9 @@ public:
         ~Modf();
         
         template<unsigned N>
-        void regist_window(enum KRN::Window<N>::MODE (&mode), unsigned (&id));
+        void regist_window(enum MODE (&mode), unsigned (&id));
+        template<unsigned N>
+        void deal_mode(enum MODE (&mode), enum MODE target, unsigned id);
 
         void clear_window(unsigned id);
         
@@ -49,3 +26,5 @@ public:
 
     extern Modf modf;
 } // namespace KRN::MODF
+
+#include "window.hpp"

@@ -1,7 +1,8 @@
 //#include "../global/main.hpp"
-#include "../libs/kernel_memory_allocate/kmalloc.hpp"
-#include "../global/type/type.hpp"
-#include "../modf/modifier.hpp"
+#include <libs/kernel_memory_allocate/kmalloc.hpp>
+#include <global/type/type.hpp>
+#include <modf/modifier.hpp>
+#include <modf/window.hpp>
 
 #pragma once
 
@@ -149,6 +150,7 @@ namespace KRN::LAS {
         fs.move(test_path, test_path, test_win);
         fs.mkdir(test_path);
         fs.deldir(test_path);
+        fs.cmdinter(test_path);
 
         fs.Basic_info.name;
         fs.Basic_info.total_blocks;
@@ -192,10 +194,10 @@ namespace KRN::LAS {
                 } block_device;
 
                 struct {
-                    unsigned char ip_address[4];// 4 bytes
-                    unsigned short port;// 2 bytes
                     unsigned int speed;
                     unsigned int how_many_pkg_lost_per_100;
+                    unsigned char ip_address[4];// 4 bytes
+                    unsigned short port;// 2 bytes
                     char protocol;// TCP/UDP
                     char re[5];//up is 24 bytes
                 } net_device;
@@ -205,7 +207,7 @@ namespace KRN::LAS {
                 } null_device;
             };
 
-                long long int func_ptr;//8 btyes for device func
+                void *func_ptr;//8 btyes for device func
 /* func_ptr oint at the func list of 
  * one device. here we appoint:
  * each device has func list and in under form:
@@ -264,7 +266,7 @@ namespace KRN::LAS {
     // method
     public:
         char exist(STXT path);
-        void creat(STXT path); //deal by device and blocks(pages)
+        void create(STXT path); //deal by device and blocks(pages)
         void del(STXT path);
 
         template<unsigned N>

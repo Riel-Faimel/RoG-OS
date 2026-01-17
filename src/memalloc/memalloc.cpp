@@ -1,5 +1,4 @@
 #include "memalloc.hpp"
-#define NULL_PTR 0
 
 namespace KRN::MM {
 

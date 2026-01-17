@@ -1,3 +1,4 @@
+#pragma once
 #include "./type/type.hpp"
 
 #ifndef LOG_SIGN_H
