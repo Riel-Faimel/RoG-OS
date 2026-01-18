@@ -1,8 +1,7 @@
+#ifndef GLOBAL_LOG
+#define GLOBAL_LOG
 #pragma once
 #include "./type/type.hpp"
-
-#ifndef LOG_SIGN_H
-#define LOG_SIGN_H
 enum LOG_SIGN{
     SYS_DIE = -1,
     SYS_ERROR = 0,
@@ -17,4 +16,7 @@ void sys_warning(
     STXT warnning_msg,
     enum LOG_SIGN sign
 );
+
+extern LOG_SIGN SYS_STATUS;
+
 #endif

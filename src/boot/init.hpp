@@ -1,6 +1,6 @@
+#pragma once
 #include <memalloc/memalloc.hpp>
 #include <las/las.hpp>
-#include <modf/modifier.hpp>
-#include <global/window.hpp>
+#include <modf/shell.hpp>
 
 extern "C" {void _start();}

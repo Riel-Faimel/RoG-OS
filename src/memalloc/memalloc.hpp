@@ -8,7 +8,6 @@
 #include <libs/kernel_memory_allocate/kmalloc.hpp>
 #include <global/main.hpp>
 
-
 namespace KRN::MM {
     typedef void (*FuncPtr)(void *args);
 /**
@@ -117,6 +116,7 @@ namespace KRN::MM {
      * sign for handle function
      */
         TailChain(void *TailChain_Funclist_Ptr, unsigned size_init);
+        TailChain(){};
         ~TailChain();
 
         void reg(FuncPtr func_ptr_in, void *args_in, FuncPriority priority_in);
@@ -147,6 +147,8 @@ namespace KRN::MM {
             MemoryManager_SizeValue mm_sz,
             MemoryManager_TailChain mmtc_init
         );
+        
+        MMgr(){};
 
         // 分配指定大小的内存，返回指针
         void* allocate(unsigned size, unsigned alignment = 8);
@@ -195,4 +197,6 @@ namespace KRN::MM {
         static void StatusListBroken_error_rescue(StatusListBroken_error_rescue_input *input);
     }; 
 
+    extern MMgr mm;
+    extern MMgr *mm_ptr;
 }

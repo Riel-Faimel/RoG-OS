@@ -1,4 +1,12 @@
 #include "kmalloc.hpp"
+namespace KRN::MM
+{
+    class MMgr;
+
+    extern MMgr *mm __attribute__((weak)) = NULL_PTR;
+    void *allocate(unsigned size, unsigned alignment = 8) __attribute__((weak));
+} // namespace KRN::MM
+
 static class {
 private:
     unsigned char bits_map[KMALLOC_BITS_MAP_SIZE];
@@ -15,6 +23,9 @@ public:
 } kmalloc __attribute__((section(".kmalloc")));
 
 void *operator new(size_t size){
+    if(KRN::MM::mm && SYS_STATUS){
+        return KRN::MM::allocate((unsigned )size);
+    };
     return kmalloc.kmalloc_get(size);
 }
 

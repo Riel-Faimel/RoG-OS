@@ -1,5 +1,7 @@
-//#include "../global/main.hpp"
+#ifndef LAS_LAS
+#define LAS_LAS
 #include <libs/kernel_memory_allocate/kmalloc.hpp>
+#include <global/main.hpp>
 #include <global/type/type.hpp>
 #include <modf/modifier.hpp>
 #include <global/window.hpp>
@@ -346,3 +348,5 @@ namespace KRN::LAS {
     
     extern file_scheduler las;
 }
+
+#endif
