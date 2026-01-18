@@ -5,7 +5,7 @@ $(BUILD_DIR)arch/kernel.o: \
 	$(BUILD_DIR)las.o\
 	$(BUILD_DIR)modf.o\
 	$(BUILD_DIR)global.o\
-	$(BUILD_DIR)boot/init.o\
+	$(BUILD_DIR)boot.o\
 	$(FS_MOD)
 
 	$(call MKDIR_F,$@)

@@ -3,7 +3,7 @@
 #include "type/type.hpp"
 #include <modf/modifier.hpp>
 #include <modf/shell.hpp>
-#include <modf/window.hpp>
+#include <global/window.hpp>
 
 namespace KRN{
     namespace TOOL{};

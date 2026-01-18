@@ -4,18 +4,10 @@ namespace KRN::LAS {
 
     fs_create_signal init_pkg ;
     _re_pdata reg_false = static_cast<_re_pdata>(0b10101010101010100000000000000000);
-    
-    template<unsigned int N> 
-    void KRN::LAS::file_scheduler::open(STXT path, KRN::Window<N> win){};
-    
-    template<unsigned int N> 
-    void KRN::LAS::file_scheduler::read(STXT path, KRN::Window<N> win){};
-    
-    template<unsigned int N> 
-    void KRN::LAS::file_scheduler::write(STXT path, KRN::Window<N> win){};
-    
-    template<unsigned int N> 
-    void KRN::LAS::file_scheduler::move(STXT from, STXT to, KRN::Window<N> win){};
+
+    void file_scheduler::create(STXT path){
+        ;
+    }
 
     file_scheduler::file_space::file_space(): header(
         {

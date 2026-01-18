@@ -76,7 +76,7 @@ namespace KRN::MM {
 
     private:
         void *search_for_struct_space();
-        [[noreturn]] void handle_overflow(FuncPtr func_ptr_in, void *args, FuncPriority priority_in);
+        /*[[noreturn]] */void handle_overflow(FuncPtr func_ptr_in, void *args, FuncPriority priority_in);
 
     public:
         unsigned size;

@@ -2,12 +2,11 @@
 #include <libs/kernel_memory_allocate/kmalloc.hpp>
 #include <global/type/type.hpp>
 #include <modf/modifier.hpp>
-#include <modf/window.hpp>
+#include <global/window.hpp>
 
 #pragma once
 
 namespace KRN::LAS {
-    using KRN::Window;
 
 /**
  * >>> Linear Address Space <<<
@@ -270,15 +269,15 @@ namespace KRN::LAS {
         void del(STXT path);
 
         template<unsigned N>
-        void open(STXT path, Window<N> win);
+        void open(STXT path, Window<N> win){};
         template<unsigned N>
-        void close(STXT path, Window<N> win);
+        void close(STXT path, Window<N> win){};
         template<unsigned N>
-        void read(STXT path, Window<N> win); //deal by filename
+        void read(STXT path, Window<N> win){}; //deal by filename
         template<unsigned N>
-        void write(STXT path, Window<N> win);
+        void write(STXT path, Window<N> win){};
         template<unsigned N>
-        void move(STXT from, STXT to, Window<N> win);
+        void move(STXT from, STXT to, Window<N> win){};
         
         void mkdir(STXT path);
         void deldir(STXT path);

@@ -1,11 +1,9 @@
 #pragma once
 #include <global/log.hpp>
+#include <global/window.hpp>
 
-namespace KRN
-{
-    enum class MODE;
-} // namespace KRN
-
+template<unsigned N>
+class Window;
 
 namespace KRN::MODF
 {
@@ -15,9 +13,9 @@ public:
         ~Modf();
         
         template<unsigned N>
-        void regist_window(enum MODE (&mode), unsigned (&id));
+        void regist_window(Window<N> *win){;}
         template<unsigned N>
-        void deal_mode(enum MODE (&mode), enum MODE target, unsigned id);
+        void deal_mode(Window<N> *win){;}
 
         void clear_window(unsigned id);
         
@@ -25,6 +23,5 @@ public:
     };
 
     extern Modf modf;
+    extern Modf* modf_ptr;
 } // namespace KRN::MODF
-
-#include "window.hpp"
