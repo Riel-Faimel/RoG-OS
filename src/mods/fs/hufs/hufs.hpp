@@ -1,6 +1,7 @@
 #pragma once
 #include <global/type/type.hpp>
 #include <las/las.hpp>
+#include <global/window.hpp>
 /**
  * >>> HUFS <<<
  * 

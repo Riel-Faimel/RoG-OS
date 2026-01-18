@@ -1,10 +1,10 @@
-CC = x86_64-elf-g++
-AS = nasm
-LD = x86_64-elf-ld
-AR = x86_64-elf-ar
+CC = D:\msys64\mingw64\bin\arm-none-eabi-g++
+AS = D:\msys64\mingw64\arm-none-eabi\bin\as
+LD = D:/msys64/mingw64/arm-none-eabi/bin/ld
+AR = D:/msys64/mingw64/arm-none-eabi/bin/ar
 
-CFLAGSO = -nostdlib -ffreestanding -nodefaultlibs -DSTM32 -fno-builtin
-CPPFLAGSO = $(CFLAGSO) -fno-exceptions -std=c++20 -fno-rtti 
+CFLAGSO = -nostdlib -ffreestanding -nodefaultlibs -DSTM32 -fno-builtin -I "$(SRC_DIR)"
+CPPFLAGSO = $(CFLAGSO) -fno-exceptions -std=c++20 -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics
 
 CFLAGS = $(CFLAGSO) 
 CPPFLAGS = $(CPPFLAGSO)
