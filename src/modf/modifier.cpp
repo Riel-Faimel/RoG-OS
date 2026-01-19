@@ -18,6 +18,5 @@ namespace KRN::MODF
 
     //void Modf::deal_mode(MODE (&mode), MODE target, unsigned id){;}
 
-    Modf modf;
-    Modf *modf_ptr = &modf;
+    Modf *modf_ptr = NULL_PTR;
 } // namespace KRN::MODF

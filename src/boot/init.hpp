@@ -3,4 +3,6 @@
 #include <las/las.hpp>
 #include <modf/shell.hpp>
 
-extern "C" {void _start();}
+extern "C" {
+    void _start();
+}

@@ -18,16 +18,17 @@ LDCMD = $(LD) $(LDFLAGS) -o
 
 #libs
 include $(SRC_DIR)libs/kernel_memory_allocate/kmalloc.mk
+include $(SRC_DIR)libs/memop/memop.mk
+include $(SRC_DIR)libs/lc/lc.mk
 include $(SRC_DIR)libs/libs.mk
 
 #global
-include
+include $(SRC_DIR)global/struct.mk
 
 #static mods
 include $(SRC_DIR)memalloc/memalloc.mk
 include $(SRC_DIR)las/las.mk
 include $(SRC_DIR)modf/modf.mk
-include $(SRC_DIR)global/struct.mk
 include $(SRC_DIR)boot/boot.mk
 include $(SRC_DIR)src.mk
 

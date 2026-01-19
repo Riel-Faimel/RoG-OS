@@ -1,12 +1,18 @@
 #ifndef LAS_LAS
 #define LAS_LAS
-#include <libs/kernel_memory_allocate/kmalloc.hpp>
+#include <memalloc/memalloc.hpp>
 #include <global/main.hpp>
 #include <global/type/type.hpp>
 #include <modf/modifier.hpp>
 #include <global/window.hpp>
 
 #pragma once
+namespace KRN::MM
+{
+    class MMgr;
+    extern MMgr *MMgr_ptr;
+} // namespace KRN::MM
+
 
 namespace KRN::LAS {
 
@@ -58,7 +64,7 @@ namespace KRN::LAS {
  * CMD -> search for (fs name).mod
  * ld and get basic_func_list
  * call template: 
- * KRN::LAS::file_scheduler::fs_rgt_1(this, fs_init)
+ * KRN::LAS::LAspace::fs_rgt_1(this, fs_init)
  * 
  * LAS::fs_rgt_1() -> FS::fs_register() ->
  * LAS::fs_rgt_2() -> FS::init()
@@ -97,6 +103,7 @@ namespace KRN::LAS {
     #else
     #define __las_reg
     #endif
+    using KRN::MM::MMgr_ptr;
     typedef unsigned __las_reg _re_pdata;
     struct fs_basic_info{
         _re_pdata test_1;
@@ -159,7 +166,7 @@ namespace KRN::LAS {
     };
 //test end
 
-    class file_scheduler {
+    class LAspace {
     // basic components
     public:
 #pragma pack(push, 1)
@@ -224,7 +231,7 @@ namespace KRN::LAS {
  * }
  * func_ptr point at the head
  * when using, we'll just return func_ptr:movement_ptr
- * then, process'll just goto there and ignore file_scheduler
+ * then, process'll just goto there and ignore LAspace
  * 
  * this is for out of sync I/O func
  * 
@@ -289,7 +296,7 @@ namespace KRN::LAS {
         template<FS_accept T>
         void fs_rgt_1(fs_create_signal fs_init) {
             this -> aux_reg_data = static_cast<_re_pdata >(0b10101010);
-            T *fs = new T(fs_init);
+            T *fs = static_cast<T *>(KRN::MM::MMgr_ptr->allocate(sizeof(T(fs_init))));
             for_transmit_sche_info2fs las2fs = {
                 fs_init.block_size,
                 fs_init.total_block,
@@ -310,7 +317,7 @@ namespace KRN::LAS {
         }
 
         aux_reg fs_rgt_2 = [](void *ptr, fs_basic_info info_init) -> _re_pdata{
-            file_scheduler *la_this = static_cast<file_scheduler *>(ptr);
+            LAspace *la_this = static_cast<LAspace *>(ptr);
             //this
             if(info_init.test_1 != la_this -> aux_reg_data) return reg_false;
             unsigned fs_info_strc_id = la_this -> search_fs_info_strc();
@@ -346,7 +353,7 @@ namespace KRN::LAS {
 
     };
     
-    extern file_scheduler las;
+    extern LAspace *LAS_ptr;
 }
 
 #endif

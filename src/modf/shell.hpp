@@ -5,19 +5,19 @@
 
 namespace KRN::MODF
 {
-    using KRN::LAS::las;
+    using KRN::LAS::LAS_ptr;
     class Modf::Shell{
     public:
         Window<1024 * 1024> shell_space;
         Shell(STXT win_path){
             shell_space.set_mode(MODE::R_W);
-            las.create(win_path);
-            las.open(win_path, shell_space);
+            LAS_ptr->create(win_path);
+            LAS_ptr->open(win_path, shell_space);
             ;
         };
         ~Shell() = default;
         void main_loop();
     };
 
-    extern Modf::Shell root_shell;
+    extern Modf::Shell *root_shell_ptr;
 } // namespace KRN::MODF

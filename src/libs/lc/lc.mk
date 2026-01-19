@@ -1,0 +1,1 @@
+$(BUILD_DIR)libs/lc/lc.o: $(SRC_DIR)libs/lc/lc.cpp

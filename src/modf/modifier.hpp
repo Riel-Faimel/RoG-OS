@@ -22,6 +22,5 @@ public:
         class Shell;
     };
 
-    extern Modf modf;
     extern Modf* modf_ptr;
 } // namespace KRN::MODF

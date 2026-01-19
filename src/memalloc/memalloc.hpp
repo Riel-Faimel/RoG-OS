@@ -197,6 +197,5 @@ namespace KRN::MM {
         static void StatusListBroken_error_rescue(StatusListBroken_error_rescue_input *input);
     }; 
 
-    extern MMgr mm;
-    extern MMgr *mm_ptr;
+    extern MMgr *MMgr_ptr;
 }

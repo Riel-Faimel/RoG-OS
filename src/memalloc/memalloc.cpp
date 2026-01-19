@@ -478,6 +478,5 @@ NULL_LABLE:
         return;
     }
 
-    MMgr mm;
-    MMgr *mm_ptr = &mm;
+    MMgr *MMgr_ptr = NULL_PTR;
 }

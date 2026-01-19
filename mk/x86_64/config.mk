@@ -1,9 +1,9 @@
 CC = x86_64-elf-g++
 AS = nasm
-LD = x86_64-elf-ld
+LD = x86_64-elf-g++
 AR = x86_64-elf-ar
 
-CFLAGSO = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-builtin -I "$(SRC_DIR)"
+CFLAGSO = -nostdlib -ffreestanding -nodefaultlibs -Dx86_64 -fno-builtin -I "$(SRC_DIR)" -H
 CPPFLAGSO = $(CFLAGSO) -fno-exceptions -std=c++20 -fno-rtti -fno-use-cxa-atexit -fno-threadsafe-statics
 
 CFLAGS = $(CFLAGSO) 

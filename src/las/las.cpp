@@ -5,11 +5,11 @@ namespace KRN::LAS {
     fs_create_signal init_pkg ;
     _re_pdata reg_false = static_cast<_re_pdata>(0b10101010101010100000000000000000);
 
-    void file_scheduler::create(STXT path){
+    void LAspace::create(STXT path){
         ;
     }
 
-    file_scheduler::file_space::file_space(): header(
+    LAspace::file_space::file_space(): header(
         {
             .device_id = 0,
             .file_system_name = {'a', 'l', 'l', '\0'},
@@ -39,12 +39,12 @@ namespace KRN::LAS {
         scheduler_operate_list I_O_list = {};
     }
 
-    unsigned int KRN::LAS::file_scheduler::search_fs_info_strc() {
+    unsigned int KRN::LAS::LAspace::search_fs_info_strc() {
         unsigned id = 0;
         return id;
     };
 
-    KRN::LAS::_re_pdata KRN::LAS::file_scheduler::aux_reg_data;
+    KRN::LAS::_re_pdata KRN::LAS::LAspace::aux_reg_data;
     
-    file_scheduler las;
+    LAspace *LAS_ptr = NULL_PTR;
 }

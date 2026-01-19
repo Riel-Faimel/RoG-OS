@@ -2,7 +2,7 @@
 
 namespace KRN::FS::HUFS
 {
-    using KRN::LAS::las;
+    using KRN::LAS::LAS_ptr;
     using KRN::LAS::fs_create_signal;
 
     void ld(){
@@ -14,6 +14,6 @@ namespace KRN::FS::HUFS
             block_size,
             total_blocks
         };
-        las.fs_rgt_1<HUFS >(*init_pkg);
+        LAS_ptr->fs_rgt_1<HUFS >(*init_pkg);
     };
 } // namespace KRN::FS::HUFS

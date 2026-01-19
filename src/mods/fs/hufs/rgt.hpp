@@ -2,7 +2,7 @@
 
 namespace KRN::FS::HUFS
 {
-    using KRN::LAS::las;
+    using KRN::LAS::LAS_ptr;
     void ld();
 
     void mount();

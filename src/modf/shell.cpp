@@ -9,5 +9,6 @@ namespace KRN::MODF
             ;
         };
     };
-    Modf::Shell root_shell("A:/System/tmp/root_shell.win");
+    //Modf::Shell root_shell("A:/System/tmp/root_shell.win");
+    Modf::Shell *root_shell_ptr = NULL_PTR;
 } // namespace KRN::MODF
