@@ -332,8 +332,7 @@ namespace KRN::MM {
  *        ^at_blk
  * at_blk is just point at section edge
  */
-        }
-        ;
+        };
 COMMON_LABLE:
         if (status_list[sec_id] == free_blks + at_blk) {
             compress_item(sec_id, free_blks);
