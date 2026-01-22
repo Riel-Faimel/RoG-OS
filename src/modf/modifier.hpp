@@ -2,6 +2,7 @@
 #include <global/log.hpp>
 #include <global/window.hpp>
 
+class WIN;
 template<unsigned N>
 class Window;
 
@@ -12,13 +13,16 @@ public:
         Modf();
         ~Modf();
         
-        template<unsigned N>
-        void regist_window(Window<N> *win){;}
-        template<unsigned N>
-        void deal_mode(Window<N> *win){;}
+        void regist_window(WIN *win_mode);
+        void deal_mode(WIN *win_mode);
+        void clear_window(WIN *win_mode);
 
-        void clear_window(unsigned id);
-        
+        class Connecter; 
+/**
+ * for connect file and analsys .ccl
+ * .ccl: connect config list.
+ * 
+ */
         class Shell;
     };
 

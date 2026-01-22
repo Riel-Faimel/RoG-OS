@@ -3,6 +3,9 @@
 
 namespace KRN::MODF
 {
+    STXT Modf::Shell::environ_act(STXT cmd){
+        ;
+    };
     void Modf::Shell::main_loop(){
         char is_running = 1;
         while(is_running){

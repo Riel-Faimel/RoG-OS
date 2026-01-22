@@ -5,6 +5,7 @@
 #include <global/type/type.hpp>
 #include <modf/modifier.hpp>
 #include <global/window.hpp>
+#include <libs/memop/mop.hpp>
 
 #pragma once
 namespace KRN::MM
@@ -12,7 +13,6 @@ namespace KRN::MM
     class MMgr;
     extern MMgr *MMgr_ptr;
 } // namespace KRN::MM
-
 
 namespace KRN::LAS {
 
@@ -148,14 +148,14 @@ namespace KRN::LAS {
     concept FS_accept = requires(T fs, const Window<256>& test_win) {
         fs.fs_register(test, ex_);
         fs.init();
-        fs.read(test_path, test_win);
-        fs.write(test_path, test_win);
+        fs.read(test_path, test_win.buffer, sizeof(test_win));
+        fs.write(test_path, test_win.buffer, sizeof(test_win));
         fs.exist(test_path);
         fs.creat(test_path);
         fs.del(test_path);
-        fs.open(test_path, test_win);
-        fs.close(test_path, test_win);
-        fs.move(test_path, test_path, test_win);
+        fs.open(test_path, test_win.buffer, sizeof(test_win));
+        fs.close(test_path, test_win.buffer, sizeof(test_win));
+        fs.move(test_path, test_path, test_win.buffer, sizeof(test_win));
         fs.mkdir(test_path);
         fs.deldir(test_path);
         fs.cmdinter(test_path);
@@ -255,6 +255,19 @@ namespace KRN::LAS {
  * all for 128*32=4096 B : ! one page !
  */
         static _re_pdata aux_reg_data;
+    struct Ftab{
+        void *read_func;
+        void *write_func;
+        char *exist_func;
+        void *creat_func;
+        void *del_func;
+        void *open_func;
+        void *close_func;
+        void *move_func;
+        void *mkdir_func;
+        void *deldir_func;
+        };
+
     private:
         struct IO_func {
             void init();
@@ -272,26 +285,34 @@ namespace KRN::LAS {
         int all_space_size;
         int mem_size;
     // method
+        char default_lvfs[8];
+        void set_default_lvfs();
     public:
+        enum File_Mode {
+            R,
+            W,
+            WR,
+            R__,
+            W__,
+            WR__
+        };
         char exist(STXT path);
         void create(STXT path); //deal by device and blocks(pages)
         void del(STXT path);
-
-        template<unsigned N>
-        void open(STXT path, Window<N> win){};
-        template<unsigned N>
-        void close(STXT path, Window<N> win){};
-        template<unsigned N>
-        void read(STXT path, Window<N> win){}; //deal by filename
-        template<unsigned N>
-        void write(STXT path, Window<N> win){};
-        template<unsigned N>
-        void move(STXT from, STXT to, Window<N> win){};
-        
-        void mkdir(STXT path);
-        void deldir(STXT path);
-
+        void open(STXT path, WIN *win_mode, File_Mode fm = R);
+        void close(STXT path, WIN *win_mode);
+        void read(STXT path, void *win_buff, size_t win_size); //deal by filename
+        void write(STXT path, void *win_buff, size_t win_size);
+        void move(STXT from, STXT to, WIN *win_mode);
+        void mkdir(STXT path, WIN *win_mode);
+        void deldir(STXT path, WIN *win_mode);
         //void wait_for();
+/**
+ * This layer should not deal with 
+ * window *, it comes WIN * and void *
+ * with size_t buffer_size
+ */
+
 
         template<FS_accept T>
         void fs_rgt_1(fs_create_signal fs_init) {
@@ -356,4 +377,5 @@ namespace KRN::LAS {
     extern LAspace *LAS_ptr;
 }
 
+void kprint(STXT warning_msg);
 #endif

@@ -17,34 +17,19 @@ namespace KRN::FS::HUFS{
         ;
     };
 
-    template<unsigned N>
-    void HUFS::open(STXT path, Window<N> win){
-        if(win.mode == MODE::NO){
-            win.mode = MODE::NO;
-        }else{
-            win.mode = MODE::READ;
-        };
-    }
-    template<unsigned N>
-    void HUFS::close(STXT path, Window<N> win){
+    void HUFS::open(STXT path, void *win_buff, size_t win_size){
         ;
     }
-    template<unsigned N>
-    void HUFS::read(STXT path, Window<N> win){
-        if(win.mode == MODE::READ || win.mode == MODE::R_W){
-            return;
-        }
+    void HUFS::close(STXT path, void *win_buff, size_t win_size){
+        ;
+    }
+    void HUFS::read(STXT path, void *win_buff, size_t win_size){
         return;
     }
-    template<unsigned N>
-    void HUFS::write(STXT path, Window<N> win){
-        if(win.mode == MODE::WRITE || win.mode == MODE::R_W){
-            return;
-        }
+    void HUFS::write(STXT path, void *win_buff, size_t win_size){
         return;
     }
-    template<unsigned N>
-    void HUFS::move(STXT from, STXT to, Window<N> win){
+    void HUFS::move(STXT from, STXT to, void *win_buff, size_t win_size){
         ;
     }
 

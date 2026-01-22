@@ -1,17 +1,32 @@
-ARCH ?= x86_64
+ARCH ?= Win2x86_64
 ROOT_DIR := $(CURDIR)
 BUILD_DIR = $(ROOT_DIR)/build/
 SRC_DIR = $(ROOT_DIR)/src/
 
+
+ifeq ($(ARCH), Win2x86_64)
+	include $(ROOT_DIR)/mk/x86_64/*.mk
 define MKDIR_F
 	@if not exist "$(dir $(1))" mkdir "$(dir $(1))"
 endef
-
-ifeq ($(ARCH), x86_64)
-	include $(ROOT_DIR)/mk/x86_64/*.mk
 endif
-ifeq ($(ARCH), STM32)
+ifeq ($(ARCH), Win2STM32)
 	include $(ROOT_DIR)/mk/STM32/*.mk
+define MKDIR_F
+	@if not exist "$(dir $(1))" mkdir "$(dir $(1))"
+endef
+endif
+ifeq ($(ARCH), Linux2x86_64)
+	include $(ROOT_DIR)/mk/x86_64/*.mk
+define MKDIR_F
+	@mkdir -p "$(dir $(1))"
+endef
+endif
+ifeq ($(ARCH), Linux2STM32)
+	include $(ROOT_DIR)/mk/STM32/*.mk
+define MKDIR_F
+	@mkdir -p "$(dir $(1))"
+endef
 endif
 
 LDCMD = $(LD) $(LDFLAGS) -o

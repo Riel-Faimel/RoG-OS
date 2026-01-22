@@ -1,11 +1,18 @@
 #pragma once
 #include <modf/modifier.hpp>
 
-namespace KRN::MODF
+namespace KRN
 {
-    class Modf;
-    extern Modf* modf_ptr;
-} // namespace KRN::MODF
+    namespace MODF
+    {
+        class Modf;
+        extern Modf* modf_ptr;
+    } // namespace MODF
+    namespace LAS
+    {
+        class LAspace;
+    } // namespace LAS
+} // namespace KRN
 
 using KRN::MODF::modf_ptr;
 using KRN::MODF::Modf;
@@ -17,23 +24,34 @@ enum class MODE : int{
     WRITE = 2
 };
 
-template<unsigned N>
-class Window{
-private:
-    unsigned id;
-    unsigned buffer_size;
-    MODE mode;
-    unsigned char sign;
-    friend class KRN::MODF::Modf;
+#pragma pack(push, 8)
+class WIN{
 public:
+    unsigned id;
+    MODE mode; //int * 2 = 8bytes
+    unsigned long long sign; // all for 8 + 8 = 16bytes
+    WIN();
+    ~WIN();
+    void set_mode(MODE target);
+    operator void *();
+};
+#pragma pop
+
+#pragma pack(push, 8)
+template<unsigned N>
+class Window : public WIN {
+public:
+    size_t buffer_size; // above for 16 + 8 = 24bytes
     BYTE buffer[N];
+    friend class KRN::MODF::Modf;
+    friend class KRN::LAS::LAspace;
     Window():
-    buffer_size(N),
-    sign(0){
-        modf_ptr->template regist_window<N>(this);
+    WIN(),
+    buffer_size(N){
+        ;
     }
     ~Window(){
-        modf_ptr->clear_window(id);
+        ;
     }
     inline BYTE &operator[](unsigned offset){
         return buffer[offset];
@@ -41,8 +59,5 @@ public:
     inline const BYTE &operator[](unsigned offset)const{
         return buffer[offset];
     };
-    
-    void set_mode(MODE target){
-        modf_ptr->template deal_mode<N>(this);
-    }
 };
+#pragma pop

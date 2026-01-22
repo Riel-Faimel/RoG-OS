@@ -88,7 +88,7 @@ namespace KRN::MM {
     ){
         if(status_list[section_id + 1] <= blk_size){
             this->sign_1 = (char )0xFF;
-            sys_warning((STXT )"status unknown error: extern broken", SYS_ERROR);
+            sys_warning("status unknown error: extern broken", SYS_ERROR);
             StatusListBroken_error_rescue_input *in = new StatusListBroken_error_rescue_input{
                 //
             };
@@ -245,6 +245,7 @@ namespace KRN::MM {
  * size in the list
  */
         sign_1 = (char )0xFF;
+        sys_warning("operate failed: unknown pointer", SYS_FAILED);
         return ;
     }
 

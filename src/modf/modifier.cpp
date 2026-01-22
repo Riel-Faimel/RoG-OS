@@ -10,13 +10,17 @@ namespace KRN::MODF
         ;
     }
 
-    //void Modf::regist_window(MODE (&mode), unsigned (&id)){}
-
-    void Modf::clear_window(unsigned id){
+    void Modf::regist_window(WIN *win_mode){
         ;
-    };
+    }
 
-    //void Modf::deal_mode(MODE (&mode), MODE target, unsigned id){;}
+    void Modf::clear_window(WIN *win_mode){
+        ;
+    }
+
+    void Modf::deal_mode(WIN *win_mode){
+        ;
+    }
 
     Modf *modf_ptr = NULL_PTR;
 } // namespace KRN::MODF

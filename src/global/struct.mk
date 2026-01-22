@@ -1,9 +1,11 @@
 $(BUILD_DIR)global/log.o: $(SRC_DIR)global/log.cpp
 $(BUILD_DIR)global/main.o: $(SRC_DIR)global/main.cpp
+$(BUILD_DIR)global/window.o: $(SRC_DIR)global/window.cpp
 
 $(BUILD_DIR)global.o: \
 	$(BUILD_DIR)global/log.o\
-	$(BUILD_DIR)global/main.o
+	$(BUILD_DIR)global/main.o\
+	$(BUILD_DIR)global/window.o
 	
 	$(call MKDIR_F,$@)
 	$(LDCMD) $@ $^

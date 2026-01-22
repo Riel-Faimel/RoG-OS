@@ -13,10 +13,11 @@ enum LOG_SIGN{
 };
 
 void sys_warning(
-    STXT warnning_msg,
+    STXT warning_msg,
     enum LOG_SIGN sign
 );
 
 extern LOG_SIGN SYS_STATUS;
+extern void kprint(STXT warning_msg);
 
 #endif

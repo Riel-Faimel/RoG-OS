@@ -73,6 +73,35 @@ public:
             __le64 t;//delete
             __le64 root_vector_table;
         };
+
+//        struct Ftab{
+//            void (HUFS::*read)(STXT, void *, size_t);
+//            void (HUFS::*write)(STXT, void *, size_t);
+//            char (HUFS::*exist)(STXT);
+//            void (HUFS::*creat)(STXT);
+//            void (HUFS::*del)(STXT);
+//            void (HUFS::*open)(STXT, void *, size_t);
+//            void (HUFS::*close)(STXT, void *, size_t);
+//            void (HUFS::*move)(STXT, STXT, void *, size_t);
+//            void (HUFS::*mkdir)(STXT);
+//            void (HUFS::*deldir)(STXT);
+//            void (HUFS::*cmdinter)(STXT);
+//        };
+        
+        KRN::LAS::LAspace::Ftab ftab = {
+            (&HUFS::read),
+            (&HUFS::write),
+            (&HUFS::exist),
+            (&HUFS::creat),
+            (&HUFS::del),
+            (&HUFS::open),
+            (&HUFS::close),
+            (&HUFS::move),
+            (&HUFS::mkdir),
+            (&HUFS::deldir),
+            (&HUFS::cmdinter)
+        };
+        
     
 private:
         root_info_block root_info_block;
@@ -94,24 +123,16 @@ public:
         char exist(STXT path);
         void creat(STXT path);
         void del(STXT path);
-
-        template<unsigned N>
-        void open(STXT path, Window<N> win);
-        template<unsigned N>
-        void close(STXT path, Window<N> win);
-        template<unsigned N>
-        void read(STXT path, Window<N> win); //deal by filename
-        template<unsigned N>
-        void write(STXT path, Window<N> win);
-        template<unsigned N>
-        void move(STXT from, STXT to, Window<N> win);
-        
+        void open(STXT path, void *win_buff, size_t win_size);
+        void close(STXT path, void *win_buff, size_t win_size);
+        void read(STXT path, void *win_buff, size_t win_size); //deal by filename
+        void write(STXT path, void *win_buff, size_t win_size);
+        void move(STXT from, STXT to, void *win_buff, size_t win_size);
         void mkdir(STXT path);
         void deldir(STXT path);
         void format();
         void show_dir() const;
         void show_tree() const;
-
         void cmdinter(STXT command);
     };
 }
