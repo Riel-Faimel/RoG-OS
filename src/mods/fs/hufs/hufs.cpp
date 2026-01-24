@@ -36,4 +36,50 @@ namespace KRN::FS::HUFS{
     void HUFS::cmdinter(STXT command){
         ;
     }
+
+    void hufs_read(void *obj, STXT path, void *win_buff, size_t win_size){
+        static_cast<HUFS *>(obj) -> read(path, win_buff, win_size);
+    };
+    void hufs_write(void *obj, STXT path, void *win_buff, size_t win_size){
+        static_cast<HUFS *>(obj) -> write(path, win_buff, win_size);
+    };
+    char hufs_exist(void *obj, STXT path){
+        static_cast<HUFS *>(obj) -> exist(path);
+    };
+    void hufs_creat(void *obj, STXT path){
+        static_cast<HUFS *>(obj) -> creat(path);
+    };
+    void hufs_del(void *obj, STXT path){
+        static_cast<HUFS *>(obj) -> del(path);
+    };
+    void hufs_open(void *obj, STXT path, void *win_buff, size_t win_size){
+        static_cast<HUFS *>(obj) -> open(path, win_buff, win_size);
+    };
+    void hufs_close(void *obj, STXT path, void *win_buff, size_t win_size){
+        static_cast<HUFS *>(obj) -> close(path, win_buff, win_size);
+    };
+    void hufs_move(void *obj, STXT from, STXT to, void *win_buff, size_t win_size){
+        static_cast<HUFS *>(obj) -> move(from, to, win_buff, win_size);
+    };
+    void hufs_mkdir(void *obj, STXT path){
+        static_cast<HUFS *>(obj) -> mkdir(path);
+    };
+    void hufs_deldir(void *obj, STXT path){
+        static_cast<HUFS *>(obj) -> deldir(path);
+    };
+    void hufs_cmdinter(void *obj, STXT cmd){
+        static_cast<HUFS *>(obj) -> cmdinter(cmd);
+    };
+    KRN::LAS::Ftab hufs_ftab = {
+        &hufs_read,
+        &hufs_write,
+        &hufs_exist,
+        &hufs_creat,
+        &hufs_del,
+        &hufs_open,
+        &hufs_close,
+        &hufs_move,
+        &hufs_mkdir,
+        &hufs_deldir,
+    };
 }

@@ -25,7 +25,7 @@ namespace KRN::LAS {
             .null_device = {
                 .null = {0, 0, 0, 0, 0, 0}
             },
-            .func_ptr = 0
+            .this_ptr = 0
         }
     )/* make file_space.header struct */{
     

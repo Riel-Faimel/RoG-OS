@@ -34,7 +34,6 @@ void _start(){
     static Modf::Shell root_shell("A:/System/tmp/root_shell.win");
     if(!root_shell_ptr){
         root_shell_ptr = &root_shell;
-    }
-    ;
+    };
     root_shell_ptr->main_loop();
 }

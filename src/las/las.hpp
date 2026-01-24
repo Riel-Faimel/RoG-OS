@@ -144,18 +144,20 @@ namespace KRN::LAS {
         t_code
     };
     constexpr STXT test_path = "A:/folder/file";
+    constexpr void *test_ptr = NULL_PTR;
+    constexpr size_t test_size_t = 0x01;
     template<typename T>
-    concept FS_accept = requires(T fs, const Window<256>& test_win) {
+    concept FS_accept = requires(T fs) {
         fs.fs_register(test, ex_);
         fs.init();
-        fs.read(test_path, test_win.buffer, sizeof(test_win));
-        fs.write(test_path, test_win.buffer, sizeof(test_win));
+        fs.read(test_path, test_ptr, test_size_t);
+        fs.write(test_path, test_ptr, test_size_t);
         fs.exist(test_path);
         fs.creat(test_path);
         fs.del(test_path);
-        fs.open(test_path, test_win.buffer, sizeof(test_win));
-        fs.close(test_path, test_win.buffer, sizeof(test_win));
-        fs.move(test_path, test_path, test_win.buffer, sizeof(test_win));
+        fs.open(test_path, test_ptr, test_size_t);
+        fs.close(test_path, test_ptr, test_size_t);
+        fs.move(test_path, test_path, test_ptr, test_size_t);
         fs.mkdir(test_path);
         fs.deldir(test_path);
         fs.cmdinter(test_path);
@@ -166,6 +168,32 @@ namespace KRN::LAS {
     };
 //test end
 
+    typedef void (*Read)(void *obj, STXT path, void *win_buff, size_t win_size);
+    typedef void (*Write)(void *obj, STXT path, void *win_buff, size_t win_size);
+    typedef char (*Exist)(void *obj, STXT path);
+    typedef void (*Creat)(void *obj, STXT path);
+    typedef void (*Del)(void *obj, STXT path);
+    typedef void (*Open)(void *obj, STXT path, void *win_buff, size_t win_size);
+    typedef void (*Close)(void *obj, STXT path, void *win_buff, size_t win_size);
+    typedef void (*Move)(void *obj, STXT from, STXT to, void *win_buff, size_t win_size);
+    typedef void (*Mkdir)(void *obj, STXT path);
+    typedef void (*Deldir)(void *obj, STXT path);
+    typedef void(*Cmdinter)(void *obj, STXT cmd);
+
+    struct Ftab{
+        Read read;
+        Write write;
+        Exist exist;
+        Creat creat;
+        Del del;
+        Open open;
+        Close close;
+        Move move;
+        Mkdir mkdir;
+        Deldir deldir;
+        Cmdinter cmdinter;
+    };
+    
     class LAspace {
     // basic components
     public:
@@ -215,7 +243,7 @@ namespace KRN::LAS {
                 } null_device;
             };
 
-                void *func_ptr;//8 btyes for device func
+                void *this_ptr;//8 btyes for device func
 /* func_ptr oint at the func list of 
  * one device. here we appoint:
  * each device has func list and in under form:
@@ -255,29 +283,10 @@ namespace KRN::LAS {
  * all for 128*32=4096 B : ! one page !
  */
         static _re_pdata aux_reg_data;
-    struct Ftab{
-        void *read_func;
-        void *write_func;
-        char *exist_func;
-        void *creat_func;
-        void *del_func;
-        void *open_func;
-        void *close_func;
-        void *move_func;
-        void *mkdir_func;
-        void *deldir_func;
-        };
 
     private:
-        struct IO_func {
-            void init();
-            void read();
-            void write();
-            char *dir();
-        };
-
         struct scheduler_operate_list {
-            IO_func page[256]; //full memory page : ! fixed size !
+            Ftab page[128]; //full memory page : ! fixed size !
         };
     // property
         unsigned search_fs_info_strc();

@@ -1,17 +1,17 @@
 #pragma once
 #define NULL_PTR 0
 
-typedef __signed__ char __s8;
-typedef unsigned char __u8;
+typedef __signed__ char s8;
+typedef unsigned char u8;
 
-typedef __signed__ short __s16;
-typedef unsigned short __u16;
+typedef __signed__ short s16;
+typedef unsigned short u16;
 
-typedef __signed__ int __s32;
-typedef unsigned int __u32;
+typedef __signed__ int s32;
+typedef unsigned int u32;
 
-typedef __signed__ long __s64;
-typedef unsigned long __u64;
+typedef __signed__ long long s64;
+typedef unsigned long long u64;
 
 #ifdef __CHECK_ENDIAN__
 #define __bitwise __bitwise__
@@ -36,14 +36,14 @@ typedef __SIZE_TYPE__ size_t;
 #endif
 
 
-typedef __u8 __bitwise __le8;
-typedef __u8 __bitwise __be8;
-typedef __u16 __bitwise __le16;
-typedef __u16 __bitwise __be16;
-typedef __u32 __bitwise __le32;
-typedef __u32 __bitwise __be32;
-typedef __u64 __bitwise __le64;
-typedef __u64 __bitwise __be64;
+typedef u8 __bitwise lu8;
+typedef u8 __bitwise bu8;
+typedef u16 __bitwise lu16;
+typedef u16 __bitwise bu16;
+typedef u32 __bitwise lu32;
+typedef u32 __bitwise bu32;
+typedef u64 __bitwise lu64;
+typedef u64 __bitwise bu64;
 
 typedef unsigned char BYTE;
 typedef const char * STXT;

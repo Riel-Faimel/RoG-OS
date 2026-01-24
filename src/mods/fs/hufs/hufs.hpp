@@ -24,7 +24,7 @@
  * 
  * then give these blocks back to memory...
  */
-namespace KRN::FS::HUFS {
+namespace KRN::FS::HUFS{
     using KRN::LAS::for_transmit_sche_info2fs;
     using KRN::LAS::fs_basic_info;
     using KRN::LAS::aux_reg;
@@ -35,18 +35,18 @@ public:
         struct vector_table;
         
         struct vector{
-            __le64 f_id;
+            lu64 f_id;
             union {
                 struct {
-                    __le64 blocks_start;
-                    __le64 blocks_end;
+                    lu64 blocks_start;
+                    lu64 blocks_end;
                 } file;
                 struct {
-                    __le64 start;/*MAX_BLOCK*/
+                    lu64 start;/*MAX_BLOCK*/
                     vector_table *sub_folder_vector_table;
                 } folder;
             };
-            __le64 data;
+            lu64 data;
         };
 
         struct vector_table{
@@ -55,8 +55,8 @@ public:
         };
 
         struct tree2id_map_item{
-            __le64 url_string;
-            __le64 id;
+            lu64 url_string;
+            lu64 id;
         };
 
         struct tree2id_map{
@@ -65,43 +65,14 @@ public:
         };
 
         struct root_info_block{
-            __le64 fs_magic;
-            __le64 block_size = 4096; //4096 for default
-            __le64 total_blocks;
-            __le64 device_size;
+            lu64 fs_magic;
+            lu64 block_size = 4096; //4096 for default
+            lu64 total_blocks;
+            lu64 device_size;
         //256 bytes
-            __le64 t;//delete
-            __le64 root_vector_table;
+            lu64 t;//delete
+            lu64 root_vector_table;
         };
-
-//        struct Ftab{
-//            void (HUFS::*read)(STXT, void *, size_t);
-//            void (HUFS::*write)(STXT, void *, size_t);
-//            char (HUFS::*exist)(STXT);
-//            void (HUFS::*creat)(STXT);
-//            void (HUFS::*del)(STXT);
-//            void (HUFS::*open)(STXT, void *, size_t);
-//            void (HUFS::*close)(STXT, void *, size_t);
-//            void (HUFS::*move)(STXT, STXT, void *, size_t);
-//            void (HUFS::*mkdir)(STXT);
-//            void (HUFS::*deldir)(STXT);
-//            void (HUFS::*cmdinter)(STXT);
-//        };
-        
-        KRN::LAS::LAspace::Ftab ftab = {
-            (&HUFS::read),
-            (&HUFS::write),
-            (&HUFS::exist),
-            (&HUFS::creat),
-            (&HUFS::del),
-            (&HUFS::open),
-            (&HUFS::close),
-            (&HUFS::move),
-            (&HUFS::mkdir),
-            (&HUFS::deldir),
-            (&HUFS::cmdinter)
-        };
-        
     
 private:
         root_info_block root_info_block;
@@ -118,8 +89,6 @@ public:
         } Basic_info;
         
         
-        void fs_register(for_transmit_sche_info2fs init_input, aux_reg fs_rgt_2);
-        void init();
         char exist(STXT path);
         void creat(STXT path);
         void del(STXT path);
@@ -130,9 +99,26 @@ public:
         void move(STXT from, STXT to, void *win_buff, size_t win_size);
         void mkdir(STXT path);
         void deldir(STXT path);
+        void cmdinter(STXT command);
+
+        void fs_register(for_transmit_sche_info2fs init_input, aux_reg fs_rgt_2);
+        void init();
         void format();
         void show_dir() const;
         void show_tree() const;
-        void cmdinter(STXT command);
     };
+
+    void hufs_read(void *obj, STXT path, void *win_buff, size_t win_size);
+    void hufs_write(void *obj, STXT path, void *win_buff, size_t win_size);
+    char hufs_exist(void *obj, STXT path);
+    void hufs_creat(void *obj, STXT path);
+    void hufs_del(void *obj, STXT path);
+    void hufs_open(void *obj, STXT path, void *win_buff, size_t win_size);
+    void hufs_close(void *obj, STXT path, void *win_buff, size_t win_size);
+    void hufs_move(void *obj, STXT from, STXT to, void *win_buff, size_t win_size);
+    void hufs_mkdir(void *obj, STXT path);
+    void hufs_deldir(void *obj, STXT path);
+    void hufs_cmdinter(void *obj, STXT cmd);
+
+    extern KRN::LAS::Ftab hufs_ftab;
 }

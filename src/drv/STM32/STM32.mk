@@ -1,0 +1,1 @@
+$(SRC_DIR)drv/STM32/time_ths.o: $(BUILD_DIR)drv/STM32/time_ths.cpp

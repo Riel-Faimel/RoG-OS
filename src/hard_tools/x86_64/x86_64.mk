@@ -1,1 +1,0 @@
-$(SRC_DIR)hard_tools/x86_64/time_ths.o: $(BUILD_DIR)hard_tools/x86_64/time_ths.cpp
