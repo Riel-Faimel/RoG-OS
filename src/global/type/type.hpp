@@ -27,11 +27,17 @@ typedef unsigned long long u64;
 
 #ifdef STM32
 typedef unsigned size_t;
+
+typedef unsigned long uintptr_t;
+typedef long intptr_t;
 #endif
 #ifdef x86_64
 #ifndef _SIZE_T
 #define _SIZE_T
 typedef __SIZE_TYPE__ size_t;
+
+typedef unsigned long long uintptr_t;
+typedef long long intptr_t;
 #endif
 #endif
 

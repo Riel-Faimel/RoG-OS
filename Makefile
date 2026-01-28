@@ -45,12 +45,15 @@ include $(SRC_DIR)memalloc/memalloc.mk
 include $(SRC_DIR)las/las.mk
 include $(SRC_DIR)modf/modf.mk
 include $(SRC_DIR)boot/boot.mk
+include $(SRC_DIR)ctl/ctl.mk
 include $(SRC_DIR)src.mk
 
 #mods
 include $(SRC_DIR)mods/fs/fs.mk
+include $(SRC_DIR)mods/drv/drv.mk
 
 MOD = $(FS_MOD)
+MOD += $(DRV_MOD)
 
 $(BUILD_DIR)%.o: $(SRC_DIR)%.cpp
 	$(call MKDIR_F,$@)

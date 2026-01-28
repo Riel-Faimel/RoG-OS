@@ -1,0 +1,1 @@
+$(BUILD_DIR)mods/drv/x86_64/time/time_ths.cpp: $(SRC_DIR)mods/drv/x86_64/time/time_ths.cpp

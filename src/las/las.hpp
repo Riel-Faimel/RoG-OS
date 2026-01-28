@@ -64,7 +64,7 @@ namespace KRN::LAS {
  * CMD -> search for (fs name).mod
  * ld and get basic_func_list
  * call template: 
- * KRN::LAS::LAspace::fs_rgt_1(this, fs_init)
+ * LAspace::fs_rgt_1(this, fs_init)
  * 
  * LAS::fs_rgt_1() -> FS::fs_register() ->
  * LAS::fs_rgt_2() -> FS::init()
@@ -93,10 +93,10 @@ namespace KRN::LAS {
  * why not use LVFS?
  */
     
-    #define fs_ready 0b11
-    #define fs_busy 0b10
-    #define fs_uninit 0b01
-    #define fs_lost 0b00
+    #define dv_ready 0b11
+    #define dv_busy 0b10
+    #define dv_uninit 0b01
+    #define dv_lost 0b00
 
     #ifdef __CHECK_ENDIAN__
     #define __las_reg __las_reg
@@ -143,24 +143,24 @@ namespace KRN::LAS {
         (unsigned )4096,
         t_code
     };
-    constexpr STXT test_path = "A:/folder/file";
+    constexpr STXT test_STXT = "A:/folder/file";
     constexpr void *test_ptr = NULL_PTR;
     constexpr size_t test_size_t = 0x01;
     template<typename T>
     concept FS_accept = requires(T fs) {
         fs.fs_register(test, ex_);
         fs.init();
-        fs.read(test_path, test_ptr, test_size_t);
-        fs.write(test_path, test_ptr, test_size_t);
-        fs.exist(test_path);
-        fs.creat(test_path);
-        fs.del(test_path);
-        fs.open(test_path, test_ptr, test_size_t);
-        fs.close(test_path, test_ptr, test_size_t);
-        fs.move(test_path, test_path, test_ptr, test_size_t);
-        fs.mkdir(test_path);
-        fs.deldir(test_path);
-        fs.cmdinter(test_path);
+        T::read(test_ptr, static_cast<WIN *>(test_ptr), test_size_t);
+        T::write(test_ptr, static_cast<WIN *>(test_ptr), test_size_t);
+        T::exist(test_ptr, test_STXT);
+        T::creat(test_ptr, test_STXT);
+        T::del(test_ptr, test_STXT);
+        T::open(test_ptr, test_STXT, static_cast<WIN *>(test_ptr));
+        T::close(test_ptr, static_cast<WIN *>(test_ptr));
+        T::move(test_ptr, test_STXT, test_STXT, static_cast<WIN *>(test_ptr));
+        T::mkdir(test_ptr, test_STXT);
+        T::deldir(test_ptr, test_STXT);
+        T::cmdinter(test_ptr, test_STXT, test_STXT);
 
         fs.Basic_info.name;
         fs.Basic_info.total_blocks;
@@ -168,17 +168,26 @@ namespace KRN::LAS {
     };
 //test end
 
-    typedef void (*Read)(void *obj, STXT path, void *win_buff, size_t win_size);
-    typedef void (*Write)(void *obj, STXT path, void *win_buff, size_t win_size);
+    typedef void(* ReadLBA)(unsigned lba, void *buffer, size_t size);
+    typedef void(* WriteLBA)(unsigned lba, void *buffer, size_t size);
+
+    typedef void (*Read)(void *obj, WIN *win_buff, size_t win_size);
+    typedef void (*Write)(void *obj, WIN *win_buff, size_t win_size);
     typedef char (*Exist)(void *obj, STXT path);
     typedef void (*Creat)(void *obj, STXT path);
     typedef void (*Del)(void *obj, STXT path);
-    typedef void (*Open)(void *obj, STXT path, void *win_buff, size_t win_size);
-    typedef void (*Close)(void *obj, STXT path, void *win_buff, size_t win_size);
-    typedef void (*Move)(void *obj, STXT from, STXT to, void *win_buff, size_t win_size);
+    typedef void (*Open)(void *obj, STXT path, WIN *win_mode);
+    typedef void (*Close)(void *obj, WIN *win_mode);
+    typedef void (*Move)(void *obj, STXT from, STXT to, WIN *win_mode);
     typedef void (*Mkdir)(void *obj, STXT path);
     typedef void (*Deldir)(void *obj, STXT path);
-    typedef void(*Cmdinter)(void *obj, STXT cmd);
+    typedef void(*Cmdinter)(void *obj, STXT cmd, STXT params);
+
+    struct Dtab{
+        void *this_ptr;
+        ReadLBA read_lba;
+        WriteLBA write_lba;
+    };
 
     struct Ftab{
         Read read;
@@ -199,17 +208,18 @@ namespace KRN::LAS {
     public:
 #pragma pack(push, 1)
         struct storage {
-            int device_id; //4bytes
-            char file_system_name[6]; //6
-
-            char specific_descript[16]; //16
-            unsigned char capacity[5]; //size of storage //5byte // 2^(5*8)MB ~ 1 PB
+            unsigned int device_id; //4bytes
+            char name[4]; //4bytes
+            unsigned char *specific_descript; //up is 25bytes
+            unsigned char capacity[6]; //size of storage //7byte // 2^(6*8)B ~ 256 TB or 2^(6*8)MB ~ 256 EB
+            char file_system_name[9]; //9bytes
             //under is 1byte
             unsigned char status: 2; //ready? busy? broke? ... //2bites
+            unsigned char use_m_bytes: 1;
             unsigned char is_memory: 1;
-            unsigned char is_local: 1;
             unsigned char is_swap: 1;
-            unsigned char is_net_disk: 1;
+            unsigned char is_local: 1;
+            unsigned char has_fs: 1;
             unsigned char extra_sign: 2;//all for 32 bytes
             //under is 24 bytes for union
             union {
@@ -217,16 +227,14 @@ namespace KRN::LAS {
                     unsigned int address_range;
                     unsigned int OS_used;
                     unsigned int cache_size;
-                    unsigned int re[3];//24 bytes
+                    unsigned int re[1];//24 bytes
                 } bit_device;
 
                 struct {
                     unsigned int block_size;
                     unsigned int total_blocks;
-                    unsigned int broken_blocks;
-                    unsigned int read_speed;
-                    unsigned int write_speed;
-                    unsigned int re;//all for 24 bytes
+                    unsigned int speed;
+                    unsigned int re;//all for 16 bytes
                 } block_device;
 
                 struct {
@@ -235,28 +243,19 @@ namespace KRN::LAS {
                     unsigned char ip_address[4];// 4 bytes
                     unsigned short port;// 2 bytes
                     char protocol;// TCP/UDP
-                    char re[5];//up is 24 bytes
+                    char re[3];//up is 16 bytes
                 } net_device;
 
                 struct {
-                    unsigned int null[6];
+                    unsigned int null[4];//16 bytes
                 } null_device;
             };
-
-                void *this_ptr;//8 btyes for device func
+            void *this_ptr;//8 btyes for device self
+            void *func_ptr;//8 btyes for device func
 /* func_ptr oint at the func list of 
  * one device. here we appoint:
- * each device has func list and in under form:
- * struct func_list{
- *     init();
- *     read();
- *     write();
- *     ioctl();
- *     status();
- *     tree();
- *     line();
- *     throw();
- * }
+ * each device has func list(see Ftab)
+ * 
  * func_ptr point at the head
  * when using, we'll just return func_ptr:movement_ptr
  * then, process'll just goto there and ignore LAspace
@@ -271,8 +270,7 @@ namespace KRN::LAS {
  * not mem but swap is true swap
  * not mem either swap just disk 
  */
-        class file_space {
-        public:
+        struct file_space {
             storage header;
             storage devices[127]; //items of hardware once with storage capacity
             file_space();
@@ -285,6 +283,11 @@ namespace KRN::LAS {
         static _re_pdata aux_reg_data;
 
     private:
+        struct{
+            unsigned id;
+            unsigned device_id;
+        } bind_table[1024];
+        unsigned get_bind_table_space();
         struct scheduler_operate_list {
             Ftab page[128]; //full memory page : ! fixed size !
         };
@@ -294,10 +297,10 @@ namespace KRN::LAS {
         int all_space_size;
         int mem_size;
     // method
-        char default_lvfs[8];
+        unsigned char default_lvfs;
         void set_default_lvfs();
     public:
-        enum File_Mode {
+        enum LAS_Mode {
             R,
             W,
             WR,
@@ -305,13 +308,14 @@ namespace KRN::LAS {
             W__,
             WR__
         };
+
         char exist(STXT path);
         void create(STXT path); //deal by device and blocks(pages)
         void del(STXT path);
-        void open(STXT path, WIN *win_mode, File_Mode fm = R);
-        void close(STXT path, WIN *win_mode);
-        void read(STXT path, void *win_buff, size_t win_size); //deal by filename
-        void write(STXT path, void *win_buff, size_t win_size);
+        void open(STXT path, WIN *win_mode, LAS_Mode fm = R);
+        void close(WIN *win_mode);
+        void read(WIN *win_mode, size_t win_size); //deal by filename
+        void write(WIN *win_mode, size_t win_size);
         void move(STXT from, STXT to, WIN *win_mode);
         void mkdir(STXT path, WIN *win_mode);
         void deldir(STXT path, WIN *win_mode);
@@ -321,8 +325,6 @@ namespace KRN::LAS {
  * window *, it comes WIN * and void *
  * with size_t buffer_size
  */
-
-
         template<FS_accept T>
         void fs_rgt_1(fs_create_signal fs_init) {
             this -> aux_reg_data = static_cast<_re_pdata >(0b10101010);

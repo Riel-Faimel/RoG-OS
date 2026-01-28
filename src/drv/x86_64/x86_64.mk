@@ -1,1 +1,0 @@
-$(SRC_DIR)drv/x86_64/time_ths.o: $(BUILD_DIR)drv/x86_64/time_ths.cpp

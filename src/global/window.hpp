@@ -34,6 +34,7 @@ public:
     ~WIN();
     void set_mode(MODE target);
     operator void *();
+    operator size_t();
 };
 #pragma pop
 

@@ -1,9 +1,9 @@
 #pragma once
 #ifdef STM32
-#include <drv/STM32/time_ths.hpp>
+#include <mods/drv/STM32/time/time_ths.hpp>
 #endif
 #ifdef x86_64
-#include <drv/x86_64/time_ths.hpp>
+#include <mods/drv/x86_64/time/time_ths.hpp>
 #endif
 #include <libs/kernel_memory_allocate/kmalloc.hpp>
 #include <global/main.hpp>

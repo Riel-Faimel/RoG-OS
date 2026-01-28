@@ -83,23 +83,24 @@ public:
 
         struct {
             const char *name = "HUFS";
+            const char *descript = "A simple file system for continue file storage";
             unsigned total_blocks;
             unsigned block_size;
             int root_info_block;
         } Basic_info;
         
         
-        char exist(STXT path);
-        void creat(STXT path);
-        void del(STXT path);
-        void open(STXT path, void *win_buff, size_t win_size);
-        void close(STXT path, void *win_buff, size_t win_size);
-        void read(STXT path, void *win_buff, size_t win_size); //deal by filename
-        void write(STXT path, void *win_buff, size_t win_size);
-        void move(STXT from, STXT to, void *win_buff, size_t win_size);
-        void mkdir(STXT path);
-        void deldir(STXT path);
-        void cmdinter(STXT command);
+        static void read(void *obj, WIN *win_buff, size_t win_size);
+        static void write(void *obj, WIN *win_buff, size_t win_size);
+        static char exist(void *obj, STXT path);
+        static void creat(void *obj, STXT path);
+        static void del(void *obj, STXT path);
+        static void open(void *obj, STXT path, WIN *win_mode);
+        static void close(void *obj, WIN *win_mode);
+        static void move(void *obj, STXT from, STXT to, WIN *win_mode);
+        static void mkdir(void *obj, STXT path);
+        static void deldir(void *obj, STXT path);
+        static void cmdinter(void *obj, STXT cmd, STXT params);
 
         void fs_register(for_transmit_sche_info2fs init_input, aux_reg fs_rgt_2);
         void init();
@@ -107,18 +108,6 @@ public:
         void show_dir() const;
         void show_tree() const;
     };
-
-    void hufs_read(void *obj, STXT path, void *win_buff, size_t win_size);
-    void hufs_write(void *obj, STXT path, void *win_buff, size_t win_size);
-    char hufs_exist(void *obj, STXT path);
-    void hufs_creat(void *obj, STXT path);
-    void hufs_del(void *obj, STXT path);
-    void hufs_open(void *obj, STXT path, void *win_buff, size_t win_size);
-    void hufs_close(void *obj, STXT path, void *win_buff, size_t win_size);
-    void hufs_move(void *obj, STXT from, STXT to, void *win_buff, size_t win_size);
-    void hufs_mkdir(void *obj, STXT path);
-    void hufs_deldir(void *obj, STXT path);
-    void hufs_cmdinter(void *obj, STXT cmd);
 
     extern KRN::LAS::Ftab hufs_ftab;
 }

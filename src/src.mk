@@ -6,6 +6,7 @@ $(BUILD_DIR)arch/kernel.o: \
 	$(BUILD_DIR)mmgr.o \
 	$(BUILD_DIR)modf.o\
 	$(BUILD_DIR)boot.o\
+	$(BUILD_DIR)ctl.o\
 
 #	$(FS_MOD)
 

@@ -16,3 +16,7 @@ WIN::~WIN(){
 WIN::operator void *(){
     return static_cast<void *>(reinterpret_cast<long long *>(this) + 3);
 }
+
+WIN::operator size_t(){
+    return static_cast<size_t>(reinterpret_cast<long long *>(this)[2]);
+}

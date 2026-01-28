@@ -1,0 +1,1 @@
+$(BUILD_DIR)mods/drv/x86_64/disk/ramdisk/ramdisk.o: $(SRC_DIR)mods/drv/x86_64/disk/ramdisk/ramdisk.cpp

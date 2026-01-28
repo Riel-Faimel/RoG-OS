@@ -1,0 +1,1 @@
+$(BUILD_DIR)mods/drv/x86_64/disk/SATA/SATA.o: $(SRC_DIR)mods/drv/x86_64/disk/SATA/SATA.cpp
