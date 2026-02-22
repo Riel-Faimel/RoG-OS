@@ -20,4 +20,8 @@ void sys_warning(
 extern LOG_SIGN SYS_STATUS;
 extern void kprint(STXT warning_msg);
 
+void qps(const char *val);
+void qpb(unsigned char val);
+void qpw(unsigned short val);
+void qpl(unsigned val);
 #endif

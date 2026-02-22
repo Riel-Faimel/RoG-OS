@@ -19,7 +19,7 @@ void kprint(STXT warning_msg){
     KRN::LAS::LAS_ptr -> write(k_win, k_buf_size);
 }
 
-void _start(){
+void kmain(){
     using KRN::MODF::root_shell_ptr;
     using KRN::MM::MMgr_ptr;
     using KRN::LAS::LAS_ptr;

@@ -67,13 +67,28 @@ $(BUILD_DIR)%.o: $(SRC_DIR)%.asm
 	$(call MKDIR_F,$@)
 	$(AS) $(ASFLAGS) $< -o $@
 
+$(BUILD_DIR)%.bin: $(SRC_DIR)%.asm
+	$(call MKDIR_F,$@)
+	$(AS) -f bin $< -o $@
+
 export CC AS LD ARCH ROOT_DIR BUILD_DIR SRC_DIR CFLAGS ASFLAGS LDFLAGS 
+
+os.img: $(BUILD_DIR)arch/kernel.o $(BUILD_DIR)boot/boot.bin
+	copy /b E:\texmanim\cpp\07\build\boot\boot.bin + E:\texmanim\cpp\07\build\arch\kernel.o E:\texmanim\cpp\07\build\arch\os.img  
+	
+#copy /b "$(BUILD_DIR)boot/boot.bin" + "$(BUILD_DIR)arch/kernel.o" "$(BUILD_DIR)arch/os.img"
 
 libs: $(BUILD_DIR)libos.a 
 
 result: $(BUILD_DIR)arch/kernel.o
 
+done: os.img
+
 mod: $(MOD)
+
+QEMU = qemu-system-x86_64
+run: 
+	$(QEMU) -drive format=raw,index=0,file=$(BUILD_DIR)arch/os.img,media=disk -drive format=raw,index=1,file=share.vhd,media=disk -serial stdio
 
 clean:
 	rmdir /s "$(BUILD_DIR)"

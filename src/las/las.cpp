@@ -5,7 +5,7 @@ namespace KRN::LAS {
     fs_create_signal init_pkg ;
     _re_pdata reg_false = static_cast<_re_pdata>(0b10101010101010100000000000000000);
 
-    LAspace::file_space::file_space(): header{
+    LAspace::LAspace(): header{
             .device_id = 0,
             .name = {'\0', '\0', '\0', '\0'},
             .specific_descript = NULL_PTR,
@@ -101,7 +101,7 @@ namespace KRN::LAS {
             if(*c == ':'){
                 d_buffer[i] = '\0';
                 for(
-                    storage *s = CFS.devices; 
+                    storage *s = devices; 
                     device_i < 127 && strcmp((const char *)s[device_i].name, d_buffer); 
                     device_i++
                 );
@@ -121,13 +121,13 @@ namespace KRN::LAS {
  */
 
 SEND_LABEL:
-        func_ptr = CFS.devices[device_i].func_ptr;
+        func_ptr = devices[device_i].func_ptr;
         path_to = const_cast<STXT>(path) + i;
         //now skip device part
 
         unsigned j = get_bind_table_space();
         bind_table[j].id = win_mode->id;
-        bind_table[j].device_id = CFS.devices[device_i].device_id;
+        bind_table[j].device_id = devices[device_i].device_id;
 
         for(char *c = const_cast<char *>(path)+i+1;*c || i < 64;c++){
             if(*c == '>'){
@@ -139,7 +139,7 @@ SEND_LABEL:
                 static_cast<Ftab *>(func_ptr) 
                 -> 
                 cmdinter(
-                    CFS.devices[device_i].this_ptr, 
+                    devices[device_i].this_ptr, 
                     buffer1, 
                     buffer2
                 );//FS.cmdinter()
@@ -147,7 +147,7 @@ SEND_LABEL:
             buffer1[i] = *c;
             i++;
         }
-        if(!CFS.devices[device_i].has_fs){
+        if(!devices[device_i].has_fs){
             sys_warning("LAS open: no file system found", SYS_FAILED);
             return;
         }
@@ -155,7 +155,7 @@ SEND_LABEL:
         static_cast<Ftab *>(func_ptr)
         ->
         open(
-            CFS.devices[device_i].this_ptr, 
+            devices[device_i].this_ptr, 
             path_to, 
             win_mode
         );//FS.open(STXT path_to)

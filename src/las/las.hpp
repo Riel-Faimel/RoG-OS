@@ -1,5 +1,6 @@
 #ifndef LAS_LAS
 #define LAS_LAS
+#include "./interface.hpp"
 #include <memalloc/memalloc.hpp>
 #include <global/main.hpp>
 #include <global/type/type.hpp>
@@ -8,8 +9,7 @@
 #include <libs/memop/mop.hpp>
 
 #pragma once
-namespace KRN::MM
-{
+namespace KRN::MM {
     class MMgr;
     extern MMgr *MMgr_ptr;
 } // namespace KRN::MM
@@ -97,40 +97,7 @@ namespace KRN::LAS {
     #define dv_busy 0b10
     #define dv_uninit 0b01
     #define dv_lost 0b00
-
-    #ifdef __CHECK_ENDIAN__
-    #define __las_reg __las_reg
-    #else
-    #define __las_reg
-    #endif
     using KRN::MM::MMgr_ptr;
-    typedef unsigned __las_reg _re_pdata;
-    struct fs_basic_info{
-        _re_pdata test_1;
-        _re_pdata test_2;
-        char name[6];
-        char descript[16];
-        unsigned total_size;
-        unsigned block_size;
-        unsigned root_info_block;
-        void *self;
-    };
-    struct fs_create_signal {
-        unsigned block_size;
-        unsigned total_block;
-    };
-    struct for_transmit_sche_info2fs {
-        unsigned block_size;
-        unsigned total_block;
-        _re_pdata t1;
-    };
-/**
- * use for create file system
- */
-    struct for_transmit_fs_info2sche {
-        ;
-    };
-    typedef _re_pdata (*aux_reg)(void *, fs_basic_info );
     extern _re_pdata reg_false;
 
 //compress test
@@ -250,7 +217,7 @@ namespace KRN::LAS {
                     unsigned int null[4];//16 bytes
                 } null_device;
             };
-            void *this_ptr;//8 btyes for device self
+            StorageDevice *this_ptr;//8 btyes for device self
             void *func_ptr;//8 btyes for device func
 /* func_ptr oint at the func list of 
  * one device. here we appoint:
@@ -270,24 +237,22 @@ namespace KRN::LAS {
  * not mem but swap is true swap
  * not mem either swap just disk 
  */
-        struct file_space {
-            storage header;
-            storage devices[127]; //items of hardware once with storage capacity
-            file_space();
-        };
-        file_space CFS; 
+        static _re_pdata aux_reg_data;
+
+        LAspace();
+    private:
+        storage header;
+        storage devices[127]; //items of hardware once with storage capacity
 /**
  * connect file space 
  * all for 128*32=4096 B : ! one page !
  */
-        static _re_pdata aux_reg_data;
-
-    private:
         struct{
             unsigned id;
             unsigned device_id;
         } bind_table[1024];
         unsigned get_bind_table_space();
+
         struct scheduler_operate_list {
             Ftab page[128]; //full memory page : ! fixed size !
         };
@@ -353,7 +318,7 @@ namespace KRN::LAS {
             //this
             if(info_init.test_1 != la_this -> aux_reg_data) return reg_false;
             unsigned fs_info_strc_id = la_this -> search_fs_info_strc();
-            la_this -> CFS.devices[fs_info_strc_id] = {
+            la_this -> devices[fs_info_strc_id] = {
                 //.device_id = ,
                 .file_system_name = {
                     static_cast<fs_basic_info >(info_init).name[0],

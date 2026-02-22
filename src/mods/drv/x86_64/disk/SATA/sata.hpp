@@ -2,7 +2,7 @@
 #include <global/main.hpp>
 #include <libs/memop/mop.hpp>
 
-namespace KRN::DRV::SATAHDD
+namespace KRN::DRV
 {
 
 

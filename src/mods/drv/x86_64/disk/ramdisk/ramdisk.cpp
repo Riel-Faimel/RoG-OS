@@ -1,5 +1,7 @@
 #include "ramdisk.hpp"
 
+namespace KRN::DRV
+{
 RamDisk::RamDisk(size_t size) {
     ;
 }
@@ -14,4 +16,5 @@ void RamDisk::write(size_t offset, const void* buffer, size_t size) {
 }
 size_t RamDisk::getSize() const {
     return 512 * 1024 * 1024; // 512 MB
+}
 }

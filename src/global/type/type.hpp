@@ -1,17 +1,17 @@
 #pragma once
 #define NULL_PTR 0
 
-typedef __signed__ char s8;
-typedef unsigned char u8;
+using s8 = __signed__ char;
+using u8 = unsigned char;
 
-typedef __signed__ short s16;
-typedef unsigned short u16;
+using s16 = __signed__ short;
+using u16 = unsigned short;
 
-typedef __signed__ int s32;
-typedef unsigned int u32;
+using s32 = __signed__ int;
+using u32 = unsigned int;
 
-typedef __signed__ long long s64;
-typedef unsigned long long u64;
+using s64 = __signed__ long long;
+using u64 = unsigned long long;
 
 #ifdef __CHECK_ENDIAN__
 #define __bitwise __bitwise__
@@ -34,22 +34,22 @@ typedef long intptr_t;
 #ifdef x86_64
 #ifndef _SIZE_T
 #define _SIZE_T
-typedef __SIZE_TYPE__ size_t;
+using size_t = __SIZE_TYPE__;
 
-typedef unsigned long long uintptr_t;
-typedef long long intptr_t;
+using uintptr_t = unsigned long long;
+using intptr_t = long long;
 #endif
 #endif
 
 
-typedef u8 __bitwise lu8;
-typedef u8 __bitwise bu8;
-typedef u16 __bitwise lu16;
-typedef u16 __bitwise bu16;
-typedef u32 __bitwise lu32;
-typedef u32 __bitwise bu32;
-typedef u64 __bitwise lu64;
-typedef u64 __bitwise bu64;
+using lu8 = u8 __bitwise;
+using bu8 = u8 __bitwise;
+using lu16 = u16 __bitwise;
+using bu16 = u16 __bitwise;
+using lu32 = u32 __bitwise;
+using bu32 = u32 __bitwise;
+using lu64 = u64 __bitwise;
+using bu64 = u64 __bitwise;
 
-typedef unsigned char BYTE;
-typedef const char * STXT;
+using BYTE = unsigned char;
+using STXT = const char *;

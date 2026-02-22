@@ -1,6 +1,6 @@
 #include "sata.hpp"
 
-namespace KRN::DRV::SATAHDD
+namespace KRN::DRV
 {
 
 

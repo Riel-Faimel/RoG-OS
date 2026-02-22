@@ -1,6 +1,8 @@
 #include <global/main.hpp>
 #include <libs/memop/mop.hpp>
 
+namespace KRN::DRV
+{
 class RamDisk {
 public:
     RamDisk(size_t size);
@@ -13,3 +15,4 @@ public:
 private:
     char data[512 * 1024 * 1024]; // 512 MB ramdisk
 };
+}

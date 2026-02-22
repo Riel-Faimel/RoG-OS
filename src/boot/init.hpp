@@ -4,5 +4,5 @@
 #include <modf/shell.hpp>
 
 extern "C" {
-    void _start();
+    void kmain();
 }
